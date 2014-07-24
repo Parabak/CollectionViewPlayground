@@ -70,7 +70,6 @@
 		BE19303519768E98003E4E56 /* update_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = update_icon.png; sourceTree = "<group>"; };
 		BE1EAFE2197CFE3B00D87507 /* CECarouselLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselLayout.h; sourceTree = "<group>"; };
 		BE1EAFE3197CFE3B00D87507 /* CECarouselLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CECarouselLayout.m; sourceTree = "<group>"; };
-		BE1EAFE5197D02BE00D87507 /* CECarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselViewController.h; sourceTree = "<group>"; };
 		BE1EAFE6197D02BE00D87507 /* CECarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CECarouselViewController.m; sourceTree = "<group>"; };
 		BE1EAFE8197D110300D87507 /* CECarouselCollectionViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselCollectionViewDelegate.h; sourceTree = "<group>"; };
 		BE1EAFE9197D110300D87507 /* CECarouselCollectionViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CECarouselCollectionViewDelegate.m; sourceTree = "<group>"; };
@@ -78,6 +77,7 @@
 		BE1EAFEC197D111600D87507 /* CECarouselCollectionViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CECarouselCollectionViewDataSource.m; sourceTree = "<group>"; };
 		BE3575EB197927D700B132B7 /* MINDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MINDeviceInfo.h; sourceTree = "<group>"; };
 		BE3575EC197927D700B132B7 /* MINDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MINDeviceInfo.m; sourceTree = "<group>"; };
+		BEB843721981024F00BB5D37 /* CECarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselViewController.h; sourceTree = "<group>"; };
 		BEEB6E1E196D511E00BB2AB1 /* CollectionViewPlayground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollectionViewPlayground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEEB6E21196D511E00BB2AB1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BEEB6E23196D511E00BB2AB1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -152,6 +152,7 @@
 		BEEB6E15196D511E00BB2AB1 = {
 			isa = PBXGroup;
 			children = (
+				BEB843721981024F00BB5D37 /* CECarouselViewController.h */,
 				BEEB6E72196EA11A00BB2AB1 /* Controllers */,
 				BEEB6E27196D511E00BB2AB1 /* CollectionViewPlayground */,
 				BEEB6E49196D511E00BB2AB1 /* CollectionViewPlaygroundTests */,
@@ -297,7 +298,6 @@
 				BEEB6E3A196D511E00BB2AB1 /* CECollectionViewController.m */,
 				BEEB6E73196EA14200BB2AB1 /* CEFlowViewController.h */,
 				BEEB6E74196EA14200BB2AB1 /* CEFlowViewController.m */,
-				BE1EAFE5197D02BE00D87507 /* CECarouselViewController.h */,
 				BE1EAFE6197D02BE00D87507 /* CECarouselViewController.m */,
 				BE1930291976731A003E4E56 /* CEMainViewController.h */,
 				BE19302A1976731A003E4E56 /* CEMainViewController.m */,

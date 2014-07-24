@@ -61,21 +61,10 @@
     
     CEFlowContentInfoView *issueCell = [collectionView dequeueReusableCellWithReuseIdentifier: kFlowContentInfoViewInendifier
                                                                                  forIndexPath: indexPath];
-    
+
     issueCell.tag = indexPath.item;
     [issueCell.lblTitle setText: [NSString stringWithFormat: @"Issue title %i", ((NSNumber*)_fakeSource[indexPath.item]).integerValue]];
-    
-//    if (indexPath.item == 3) {
-//
-//        issueCell.layer.transform = [self defaultTransform];
-//    } else if (indexPath.item < 3) {
-//        
-//        issueCell.layer.transform = [self leftTransform];
-//    } else {
-//        
-//        issueCell.layer.transform = [self rightTransform];
-//    }
-    
+        
     issueCell.layer.transform = [self getTransformationForIndexPath: indexPath collectionView: collectionView];
 
     return issueCell;
@@ -98,59 +87,6 @@
 #pragma mark -
 #pragma mark - Playground with Transformations
 
-//- (CATransform3D) defaultTransform {
-//    
-//    CGFloat _perspective = -1.0f / 500.0f;
-//    CGSize _viewpointOffset = CGSizeZero;
-//    
-//    CATransform3D transform = CATransform3DIdentity;
-//    transform.m34 = _perspective;
-//    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
-//    
-//    CGFloat z = 0.0f;
-//    
-//    CGFloat angel = 0.0f;
-//    
-//    transform = CATransform3DTranslate(transform, 0, 0.0f, z);
-//    
-//    return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
-//}
-//
-//- (CATransform3D) leftTransform {
-//    
-//    CGFloat _perspective = -1.0f / 500.0f;
-//    CGSize _viewpointOffset = CGSizeZero;
-//    
-//    CATransform3D transform = CATransform3DIdentity;
-//    transform.m34 = _perspective;
-//    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
-//    
-//    CGFloat z = -186.0f;
-//    
-//    CGFloat angel = M_PI_4 / 2;
-//        
-//    transform = CATransform3DTranslate(transform, 0, 0.0f, z);
-//    
-//    return CATransform3DRotate(transform, -angel, 0.0f, -1.0f, 0.0f);
-//}
-//
-//- (CATransform3D) rightTransform {
-//    
-//    CGFloat _perspective = -1.0f / 500.0f;
-//    CGSize _viewpointOffset = CGSizeZero;
-//    
-//    CATransform3D transform = CATransform3DIdentity;
-//    transform.m34 = _perspective;
-//    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
-//    
-//    CGFloat z = -186.0f;
-//    
-//    CGFloat angel = M_PI_4 / 2;
-//    
-//    transform = CATransform3DTranslate(transform, 0, 0.0f, z);
-//    
-//    return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
-//}
 
 - (CATransform3D) getTransformationForIndexPath: (NSIndexPath*) indexPath collectionView: (UICollectionView*) collectionView {
     
@@ -176,7 +112,8 @@
         clampedOffset = 1.0f;
     }
     
-    CGFloat angel = -clampedOffset * M_PI_2 * tilt;
+    CGFloat angel = -clampedOffset * M_PI_4 * tilt;
+    
     CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth * 0.5f;
     
     transform = CATransform3DTranslate(transform, 0, 0.0f, z);

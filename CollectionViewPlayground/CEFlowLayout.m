@@ -235,6 +235,7 @@ NSString * const kFloatLayoutIssueTitleKind = @"AlbumTitle";
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"layoutAttributesForItemAtIndexPath");
     return self.layoutInfo[kFloatLayoutIssueViewKind][indexPath];
 }
 

@@ -58,8 +58,4 @@ extern NSString *const kProgressBarValue;
 // or it will be better not to ask cell, but use a property of presented model
 - (BOOL) isEnabled;
 
-
-// for Carousel
-- (CGFloat) expectedAngel;
-
 @end

@@ -55,7 +55,12 @@
     _previousOffset = _currentOffset;
     _currentOffset = (scrollView.contentOffset.x / self.offsetBetweenIssues);
     
-    [self transformItemViews];
+    // here we should use borders
+    if (_currentOffset >= 0.0f && _currentOffset <= 9) {
+        
+        [self transformItemViews];
+    }
+
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -128,18 +133,13 @@
         
         if (item.shouldBeAnimated) {
             
-            // DO NOT USE array of transformations. save them in property of instance
-            
-            [UIView animateWithDuration: 0.5f animations:^{
+            [UIView animateWithDuration: 0.4f
+                                  delay: 0.0f
+                                options: UIViewAnimationOptionBeginFromCurrentState
+                             animations: ^{
                 
                 item.layer.transform = item.transform3D;
-            
-                if (item.tag == 1) {
-                    
-                    NSLog(@"\n===\nanimate\nset transformation %f\n", [(NSNumber *)[item.layer valueForKeyPath:@"transform.rotation.y"] floatValue]);
-//                    NSLog(@"\nexpected angel %f", [item expectedAngel]);
-                }
-                
+                                
                 if (item.tag == lroundf(_currentOffset)) {
                     
                     [_scrollview bringSubviewToFront: item];
@@ -152,25 +152,17 @@
                     for (NSInteger remainIndex = index + 1; remainIndex < animatedItems.count; remainIndex++) {
                         
                         if (remainIndex < animatedItems.count ) {
-                        
+                            
                             [remainItems addObject: animatedItems[remainIndex]];
                         }
                     }
                     
-                   [self animateItems: remainItems];
+                    [self animateItems: remainItems];
                 });
-            } completion:^(BOOL finished) {
                 
-                if (item.tag == 1) {
-                    NSLog(@"\n completed transformation %f\n", [(NSNumber *)[item.layer valueForKeyPath:@"transform.rotation.y"] floatValue]);
-                }
-            }];
+            } completion:nil];
             
             break;
-        } else if (item.tag == 1) {
-            
-            NSLog(@"will not be animated!!!!!");
-            BOOL test = item.shouldBeAnimated;
         }
     }
 }
@@ -207,51 +199,52 @@
     transform.m34 = _perspective;
     transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
     
-    CGFloat tilt = 0.9f;//[self valueForOption:iCarouselOptionTilt withDefault:0.9f];
+    CGFloat tilt = 0.9f;
     CGFloat spacing = 0.55f;
     
     // normalisation for interval [-1.0f; 0.0f] and [0.0f; 1.0f]
     CGFloat clampedOffset = fmaxf(-1.0f, fminf(1.0f, offset));
     
-    CGFloat angel = -clampedOffset * M_PI_2 * tilt;
+    CGFloat angel = -clampedOffset * M_PI_4 * tilt;
     
     CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth * 0.5f;
     
-//    if (fabsf(clampedOffset) != 1) {
+    CGFloat x = (clampedOffset * 0.5f * tilt + offset * spacing) * 365 / 2;
     
-        if ([itemView respondsToSelector: @selector(setClampedOffset:)]) {
+    if ([itemView respondsToSelector: @selector(setClampedOffset:)]) {
 
-            [((CEFlowContentInfoView*)itemView) setClampedOffset: clampedOffset];
-            angel = ((CEFlowContentInfoView*)itemView).clampedOffset * M_PI_2 * tilt;
+        [((CEFlowContentInfoView*)itemView) setClampedOffset: clampedOffset];
+        angel = ((CEFlowContentInfoView*)itemView).clampedOffset * M_PI_4 * tilt;
+        
+        z = fabsf(((CEFlowContentInfoView*)itemView).clampedOffset) * -kIssueItemWidth * 0.5f;
+        
+        CGFloat test = ((CEFlowContentInfoView*)itemView).clampedOffset;
+        if (tag == 0) {
             
-            z = fabsf(((CEFlowContentInfoView*)itemView).clampedOffset) * -kIssueItemWidth * 0.5f;
+//                NSLog(@"%f", test);
+        }
+        
+        if (test == -1) {
+            
+            x = -200.0f;
+        } else if (test == 1) {
+            
+            x = 200.0f;
         } else {
             
-            // now using for footers, can be ignored
-            angel = -clampedOffset * M_PI_2 * tilt;
+            x = 0.0f;
         }
-//    }
-    
-//    if (itemView.tag == 1 && [itemView respondsToSelector: @selector(setClampedOffset:)]) {
-//
-//        NSLog(@"\nindex = %i\nclamped offset%f\nitem clampled offset = %f\nitem angle = %f\nanimate flag = %i", itemView.tag,
-//              clampedOffset,
-//              ((CEFlowContentInfoView*)itemView).clampedOffset,
-//              ((CEFlowContentInfoView*)itemView).clampedOffset * M_PI_2 * tilt,
-//              ((CEFlowContentInfoView*)itemView).shouldBeAnimated);
-//        NSLog(@"\nangel = %f\nitem angle = %f animate flag = %i", angel, ((CEFlowContentInfoView*)itemView).clampedOffset * M_PI_2 * tilt, ((CEFlowContentInfoView*)itemView).shouldBeAnimated);
-//    }
+        
+        x += offset;
+        
+    }
 
-    transform = CATransform3DTranslate(transform, 0, 0.0f, z);
-//    return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
+    transform = CATransform3DTranslate(transform, x, 0.0f, z);
     
     if ([itemView respondsToSelector: @selector(transform3D)]) {
         
         ((CEFlowContentInfoView*)itemView).transform3D = CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
-        if (itemView.tag == 1) {
-            
-            NSLog(@"\ncalculated transformation to %f", angel);
-        }
+
         
     }
 }

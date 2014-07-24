@@ -67,8 +67,6 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 		[self addSubview:    self.updateIcon];
         [self addSubview:    self.progressView];
 		[self addSubview: self.downloadedIcon];
-        
-//        NSLog(@"anchor point %f",)
     }
     
     return self;
@@ -431,7 +429,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
         
         if (self.tag == 1) {
             
-            NSLog(@"\nnew value = %f\nold value = %f", clampedOffset, _clampedOffset);
+//            NSLog(@"\nnew value = %f\nold value = %f", clampedOffset, _clampedOffset);
         }
         
 //        self.shouldBeAnimated = YES;
@@ -443,44 +441,23 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     
     CGFloat tilt = 0.9f;
     
-    CGFloat calculatedRotationAngel = self.clampedOffset * M_PI_2 * tilt;
+    CGFloat calculatedRotationAngel = self.clampedOffset * M_PI_4 * tilt;
     CGFloat y_inversion = -1.0f;
-    CGFloat realRotationAngel = y_inversion *[(NSNumber *)[self.layer valueForKeyPath:@"transform.rotation.y"] floatValue];
+    CGFloat realRotationAngel = y_inversion * [(NSNumber *)[self.layer valueForKeyPath:@"transform.rotation.y"] floatValue];
     
-    if (self.tag == 1) {
-        
-//        NSLog(@"warning");
-    }
+    CGFloat calculatedTransformX = self.transform3D.m41;
+    CGFloat realTransformX = self.layer.transform.m41;
     
-    CGFloat fault = 0.001f;
+    CGFloat fault = 0.01;//0.001f;
+    
     CGFloat delta = (fabs(calculatedRotationAngel - realRotationAngel));
+    BOOL y_changed = delta > fault;
     
-//    if (self.tag == 1) {
-////
-//        NSLog(@"\ncalculatedRotationAngel = %f\nrealRotationAngel = %f", calculatedRotationAngel,realRotationAngel);
-//        NSLog(@"\ndelta %f", delta);
-//    }
+    delta = fabsf(calculatedTransformX - realTransformX);
+    fault = 1.0f;
+    BOOL x_changed = delta > fault;
     
-//    if (delta > fault) {
-//        
-//        NSInteger tag = self.tag;
-//        
-//        return YES;
-//    } else {
-//        
-//        return NO;
-//    }
-    
-    return delta > fault;
-}
-
-- (CGFloat) expectedAngel {
-    
-    CGFloat tilt = 0.9f;
-    
-    CGFloat calculatedRotationAngel = self.clampedOffset * M_PI_2 * tilt;
-    
-    return calculatedRotationAngel;
+    return y_changed || x_changed;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
