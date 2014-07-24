@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <!--Main View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="CEMainViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wIs-kc-66H"/>
+                        <viewControllerLayoutGuide type="bottom" id="HAY-3e-5a8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="AZA-0w-tYm">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipz-Bl-979" userLabel="Tool bar">
+                                <rect key="frame" x="0.0" y="0.0" width="100" height="1024"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mu9-cz-gRp">
+                                        <rect key="frame" x="10" y="974" width="80" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Edit Mode">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="toggleEditMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qVt-ZX-qbh"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwZ-tv-Enq">
+                                        <rect key="frame" x="10" y="924" width="80" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Progress">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showProgress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WiI-Cc-Boe"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QPM-zg-cSZ">
+                                        <rect key="frame" x="0.0" y="0.0" width="100" height="91"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="91" id="CAU-rm-fG6"/>
+                                            <constraint firstAttribute="width" constant="100" id="z9U-Lg-iIO"/>
+                                        </constraints>
+                                        <state key="normal">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="Switch">
+                                                    <attributes>
+                                                        <font key="NSFont" size="15" name="HelveticaNeue-Bold"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </state>
+                                        <connections>
+                                            <action selector="switchLayouts:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MuF-T4-vZw"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="lwZ-tv-Enq" secondAttribute="trailing" constant="10" id="WW6-G7-WWS"/>
+                                    <constraint firstItem="QPM-zg-cSZ" firstAttribute="top" secondItem="Ipz-Bl-979" secondAttribute="top" id="br1-2R-qVC"/>
+                                    <constraint firstItem="QPM-zg-cSZ" firstAttribute="leading" secondItem="Ipz-Bl-979" secondAttribute="leading" id="c33-LL-4fo"/>
+                                    <constraint firstAttribute="bottom" secondItem="mu9-cz-gRp" secondAttribute="bottom" constant="20" id="dl2-0z-txy"/>
+                                    <constraint firstItem="mu9-cz-gRp" firstAttribute="leading" secondItem="Ipz-Bl-979" secondAttribute="leading" constant="10" id="iIm-l9-pGp"/>
+                                    <constraint firstItem="mu9-cz-gRp" firstAttribute="top" secondItem="lwZ-tv-Enq" secondAttribute="bottom" constant="20" id="sYc-YE-py4"/>
+                                    <constraint firstAttribute="width" constant="100" id="vHU-cx-ag5"/>
+                                    <constraint firstItem="lwZ-tv-Enq" firstAttribute="leading" secondItem="Ipz-Bl-979" secondAttribute="leading" constant="10" id="wpe-jW-2By"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="HAY-3e-5a8" firstAttribute="top" secondItem="Ipz-Bl-979" secondAttribute="bottom" id="Cxr-3n-IZ6"/>
+                            <constraint firstItem="Ipz-Bl-979" firstAttribute="top" secondItem="AZA-0w-tYm" secondAttribute="top" id="Jte-76-Ka0"/>
+                            <constraint firstItem="Ipz-Bl-979" firstAttribute="leading" secondItem="AZA-0w-tYm" secondAttribute="leading" id="yWl-aJ-Ylc"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
+</document>
