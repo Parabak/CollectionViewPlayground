@@ -100,7 +100,6 @@
 
 - (void) transformItemViews {
     
-    NSMutableArray *transformations = [NSMutableArray array];
     NSMutableArray *animatedItems = [NSMutableArray array];
     
     for (UIView *issueView in _scrollview.subviews) {
@@ -160,11 +159,76 @@
                     [self animateItems: remainItems];
                 });
                 
-            } completion:nil];
+            } completion:^(BOOL finished) {
+                
+                if (item.tag == 0 || item.tag == 1) {
+                    
+                    [self printTransformMatrix: item];
+                }
+            }];
             
             break;
         }
     }
+}
+
+- (void) animateTransformsInItems: (NSArray *) items {
+    
+//    CAKeyframeAnimation *boundsOvershootAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+//    
+//    CATransform3D startingScale = CATransform3DScale (layer.transform, 0, 0, 0);
+//    CATransform3D overshootScale = CATransform3DScale (layer.transform, 1.2, 1.2, 1.0);
+//    CATransform3D undershootScale = CATransform3DScale (layer.transform, 0.9, 0.9, 1.0);
+//    CATransform3D endingScale = layer.transform;
+//    
+//    NSArray *boundsValues = [NSArray arrayWithObjects:[NSValue valueWithCATransform3D:startingScale],
+//                             [NSValue valueWithCATransform3D:overshootScale],
+//                             [NSValue valueWithCATransform3D:undershootScale],
+//                             [NSValue valueWithCATransform3D:endingScale], nil];
+//    [boundsOvershootAnimation setValues:boundsValues];
+//    
+//    NSArray *times = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0f],
+//                      [NSNumber numberWithFloat:0.5f],
+//                      [NSNumber numberWithFloat:0.9f],
+//                      [NSNumber numberWithFloat:1.0f], nil];
+//    [boundsOvershootAnimation setKeyTimes:times];
+//    
+//    
+//    NSArray *timingFunctions = [NSArray arrayWithObjects:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
+//                                [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+//                                [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+//                                nil];
+//    [boundsOvershootAnimation setTimingFunctions:timingFunctions];
+//    boundsOvershootAnimation.fillMode = kCAFillModeForwards;
+//    boundsOvershootAnimation.removedOnCompletion = NO;
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    
+    // only on completion all stack of animations for one item can be removed.
+    // if we implement it in such way we will not 'lost' any step of the scrolling animation
+}
+
+- (void) printTransformMatrix: (UIView *) view {
+    
+    NSLog(@"\nTAG %i\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f",
+          view.tag,
+          view.layer.transform.m11,
+          view.layer.transform.m12,
+          view.layer.transform.m13,
+          view.layer.transform.m14,
+          view.layer.transform.m21,
+          view.layer.transform.m22,
+          view.layer.transform.m23,
+          view.layer.transform.m24,
+          view.layer.transform.m31,
+          view.layer.transform.m32,
+          view.layer.transform.m33,
+          view.layer.transform.m34,
+          view.layer.transform.m41,
+          view.layer.transform.m42,
+          view.layer.transform.m43,
+          view.layer.transform.m44);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,6 +256,7 @@
                                         itemTag: (NSInteger) tag
                                        itemView: (UIView*) itemView {
     
+
     CGFloat _perspective = -1.0f / 500.0f;
     CGSize _viewpointOffset = CGSizeZero;
     
@@ -216,29 +281,25 @@
         [((CEFlowContentInfoView*)itemView) setClampedOffset: clampedOffset];
         angel = ((CEFlowContentInfoView*)itemView).clampedOffset * M_PI_4 * tilt;
         
-        z = fabsf(((CEFlowContentInfoView*)itemView).clampedOffset) * -kIssueItemWidth * 0.5f;
-        
+        z = fabsf(((CEFlowContentInfoView*)itemView).clampedOffset) * -kIssueItemWidth / 3;
+       
+        //TODO: REMOVE. calculate in one place
         CGFloat test = ((CEFlowContentInfoView*)itemView).clampedOffset;
-        if (tag == 0) {
-            
-//                NSLog(@"%f", test);
-        }
-        
+       
         if (test == -1) {
             
-            x = -200.0f;
+            x = -300.0f;
         } else if (test == 1) {
             
-            x = 200.0f;
+            x = 300.0f;
         } else {
             
             x = 0.0f;
         }
         
         x += offset;
-        
     }
-
+    
     transform = CATransform3DTranslate(transform, x, 0.0f, z);
     
     if ([itemView respondsToSelector: @selector(transform3D)]) {

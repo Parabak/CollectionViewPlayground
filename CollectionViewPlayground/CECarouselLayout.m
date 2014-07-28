@@ -126,12 +126,13 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
     }
     
     CGFloat angel = -clampedOffset * M_PI_4 * tilt;
-    CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth * 0.5f;
+    CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth / 3.0f;
     
     transform = CATransform3DTranslate(transform, 0, 0.0f, z);
     
     return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
     
 }
+
 
 @end
