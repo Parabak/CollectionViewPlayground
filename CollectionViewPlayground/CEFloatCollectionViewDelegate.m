@@ -44,8 +44,8 @@
         
         // issue should be centered
         _currentOffset = indexPath.item;
-        
-        [collectionView scrollRectToVisible: CGRectMake(self.offsetBetweenIssues * indexPath.item , 0, collectionView.frame.size.width, collectionView.frame.size.height)
+                
+        [collectionView scrollRectToVisible: CGRectMake(self.offsetBetweenIssues * _currentOffset, 0, collectionView.frame.size.width, collectionView.frame.size.height)
                                    animated: YES];
     } else {
         

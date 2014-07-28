@@ -85,7 +85,7 @@
     
 //	if(!decelerate) {
 //        
-//        NSLog(@"scrollViewDidEndDragging");
+        NSLog(@"scrollViewDidEndDragging");
 //		[scrollView scrollRectToVisible: CGRectIntegral( CGRectMake(self.offsetBetweenIssues * _currentOffset, 0,
 //                                                                    scrollView.bounds.size.width,
 //                                                                    scrollView.bounds.size.height) )
@@ -122,6 +122,7 @@
     }
     
     [self animateItems: animatedItems];
+//    [self animateTransformsInItems: animatedItems];
 }
 
 - (void) animateItems: (NSArray *) animatedItems {
@@ -134,7 +135,7 @@
             
             [UIView animateWithDuration: 0.4f
                                   delay: 0.0f
-                                options: UIViewAnimationOptionBeginFromCurrentState
+                                options: 0.0f //UIViewAnimationOptionBeginFromCurrentState
                              animations: ^{
                 
                 item.layer.transform = item.transform3D;
@@ -144,7 +145,7 @@
                     [_scrollview bringSubviewToFront: item];
                 }
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     
                     NSMutableArray *remainItems = [NSMutableArray array];
                     
@@ -155,7 +156,7 @@
                             [remainItems addObject: animatedItems[remainIndex]];
                         }
                     }
-                    
+
                     [self animateItems: remainItems];
                 });
                 
@@ -163,7 +164,7 @@
                 
                 if (item.tag == 0 || item.tag == 1) {
                     
-                    [self printTransformMatrix: item];
+//                    [self printTransformMatrix: item];
                 }
             }];
             
@@ -173,6 +174,67 @@
 }
 
 - (void) animateTransformsInItems: (NSArray *) items {
+    
+    
+    for (NSInteger index = 0; index < items.count; index++) {
+        
+        CEFlowContentInfoView *item = items[index];
+        
+        if (item.shouldBeAnimated) {
+            
+            CAKeyframeAnimation *flippingAnimation;
+            if (item.flippingAnimation == nil) {
+                
+                [item.layer removeAnimationForKey: @"flippingAnimation"];
+                
+                flippingAnimation = [CAKeyframeAnimation animationWithKeyPath: @"transform"];
+            } else {
+                
+                flippingAnimation = item.flippingAnimation;
+            }
+            
+            // TODO: do it in method where latest fransformation is calculated
+            
+            [item.transformations addObject: [NSValue valueWithCATransform3D: item.transform3D]];
+            
+            [flippingAnimation setValues: item.transformations];
+            
+            NSMutableArray *times = [NSMutableArray array];
+            for (NSInteger value = 0; value < item.transformations.count; value++) {
+                
+                [times addObject: @(1.0f / item.transformations.count)];
+            }
+            [flippingAnimation setKeyTimes:times];
+            
+            flippingAnimation.fillMode = kCAFillModeForwards;
+            flippingAnimation.removedOnCompletion = NO;
+            
+            [item.layer addAnimation: flippingAnimation forKey: @"flippingAnimation"];
+            
+            if (item.tag == lroundf(_currentOffset)) {
+                
+                [_scrollview bringSubviewToFront: item];
+            }
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                NSMutableArray *remainItems = [NSMutableArray array];
+                
+                for (NSInteger remainIndex = index + 1; remainIndex < items.count; remainIndex++) {
+                    
+                    if (remainIndex < items.count ) {
+                        
+                        [remainItems addObject: items[remainIndex]];
+                    }
+                }
+                
+                [self animateTransformsInItems: remainItems];
+            });
+        }
+        
+        break;
+    }
+
     
 //    CAKeyframeAnimation *boundsOvershootAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
 //    
@@ -207,6 +269,15 @@
     
     // only on completion all stack of animations for one item can be removed.
     // if we implement it in such way we will not 'lost' any step of the scrolling animation
+    for (CEFlowContentInfoView *itemview in _scrollview.subviews) {
+        
+        if (itemview.flippingAnimation == anim) {
+            
+            [itemview.transformations removeAllObjects];
+        }
+        
+        break;
+    }
 }
 
 - (void) printTransformMatrix: (UIView *) view {

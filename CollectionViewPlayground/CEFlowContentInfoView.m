@@ -454,7 +454,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     BOOL y_changed = delta > fault;
     
     delta = fabsf(calculatedTransformX - realTransformX);
-    fault = 1.0f;
+    fault = 1.5f;
     BOOL x_changed = delta > fault;
     
     return y_changed || x_changed;
