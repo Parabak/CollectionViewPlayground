@@ -55,7 +55,16 @@ extern NSString *const kProgressBarValue;
 
 @property (nonatomic, assign) CATransform3D transform3D;
 
+// TODO: Bad Solution
+@property (nonatomic, assign) CAKeyframeAnimation *flippingAnimation;
+@property (nonatomic, strong) NSMutableArray *transformations;
+
+
 // or it will be better not to ask cell, but use a property of presented model
 - (BOOL) isEnabled;
+
++ (CATransform3D) calculateTransformationForClampedOffset: (CGFloat) clampedOffset;
+- (void) calculateTransformationForOffset: (CGFloat) offsetFromCenteredItem;
+
 
 @end

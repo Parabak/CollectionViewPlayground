@@ -65,7 +65,7 @@
     issueCell.tag = indexPath.item;
     [issueCell.lblTitle setText: [NSString stringWithFormat: @"Issue title %i", ((NSNumber*)_fakeSource[indexPath.item]).integerValue]];
         
-    issueCell.layer.transform = [self getTransformationForIndexPath: indexPath collectionView: collectionView];
+//    issueCell.layer.transform = [self getTransformationForIndexPath: indexPath collectionView: collectionView];
 
     return issueCell;
 }
@@ -104,19 +104,26 @@
     CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) collectionView.delegate).currentOffset;
     
     CGFloat clampedOffset = 0.0f;
+    
+    CGFloat offset = indexPath.item - currentOffset;
+    CGFloat x = (clampedOffset * 0.5f * tilt + offset * 0.55f) * 365 / 2;
+    
     if (indexPath.item > currentOffset) {
         
         clampedOffset = -1.0f;
+        x = -200.0f;
     } else if (indexPath.item < currentOffset) {
         
         clampedOffset = 1.0f;
+        x = 200.0f;
     }
+    
     
     CGFloat angel = -clampedOffset * M_PI_4 * tilt;
     
     CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth * 0.5f;
     
-    transform = CATransform3DTranslate(transform, 0, 0.0f, z);
+    transform = CATransform3DTranslate(transform, x, 0.0f, z);
     
     return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
     
