@@ -555,4 +555,26 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
 }
 
+- (void) printTransformMatrix: (UIView *) view {
+    
+    NSLog(@"\nTAG %i\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f",
+          view.tag,
+          view.layer.transform.m11,
+          view.layer.transform.m12,
+          view.layer.transform.m13,
+          view.layer.transform.m14,
+          view.layer.transform.m21,
+          view.layer.transform.m22,
+          view.layer.transform.m23,
+          view.layer.transform.m24,
+          view.layer.transform.m31,
+          view.layer.transform.m32,
+          view.layer.transform.m33,
+          view.layer.transform.m34,
+          view.layer.transform.m41,
+          view.layer.transform.m42,
+          view.layer.transform.m43,
+          view.layer.transform.m44);
+}
+
 @end
