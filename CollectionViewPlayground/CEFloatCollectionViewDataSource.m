@@ -64,7 +64,7 @@
     issueCell.tag = indexPath.item;
     issueCell.editMode = self.editMode;
     [issueCell.lblTitle setText: [NSString stringWithFormat: @"Issue title %i", ((NSNumber*)_fakeSource[indexPath.item]).integerValue]];
-    
+        
     return issueCell;
 }
 

@@ -7,12 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <QuartzCore/QuartzCore.h>
 
 // for test
 #import "CEFloatCollectionViewDelegate.h"
 
-@interface CECarouselCollectionViewDelegate : CEFloatCollectionViewDelegate
+@interface CECarouselCollectionViewDelegate : CEFloatCollectionViewDelegate//NSObject <UICollectionViewDelegate>
 
 - (void) updateCurrentOffset: (UIScrollView*) scrollView;
 

@@ -46,7 +46,6 @@
     [self.floatLayout setupForOrientation: [UIApplication sharedApplication].statusBarOrientation];
 }
 
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

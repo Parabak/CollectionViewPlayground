@@ -104,7 +104,16 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
 }
 
 - (CATransform3D) getTransformationForIndexPath: (NSIndexPath*) indexPath {
-
+        // todo
+    CGFloat _perspective = -1.0f / 500.0f;
+    CGSize _viewpointOffset = CGSizeZero;
+    
+    CATransform3D transform = CATransform3DIdentity;
+    transform.m34 = _perspective;
+    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
+    
+    CGFloat tilt = 0.9f;
+    
     CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) self.collectionView.delegate).currentOffset;
     
     CGFloat clampedOffset = 0.0f;
@@ -116,8 +125,13 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
         clampedOffset = 1.0f;
     }
     
-    return [CEFlowContentInfoView calculateTransformationForClampedOffset: clampedOffset];
+    CGFloat angel = -clampedOffset * M_PI_4 * tilt;
+    CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth * 0.5f;
+    
+    transform = CATransform3DTranslate(transform, 0, 0.0f, z);
+    
+    return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
+    
 }
-
 
 @end

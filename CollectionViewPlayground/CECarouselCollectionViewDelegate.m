@@ -55,7 +55,7 @@
     _previousOffset = _currentOffset;
     _currentOffset = (scrollView.contentOffset.x / self.offsetBetweenIssues);
     
-    // TODO: here we should use borders
+    // here we should use borders
     if (_currentOffset >= 0.0f && _currentOffset <= 9) {
         
         [self transformItemViews];
@@ -82,6 +82,15 @@
 - (void) scrollViewDidEndDragging: (UIScrollView *) scrollView willDecelerate: (BOOL) decelerate {
     
     _scrollview = scrollView;
+    
+//	if(!decelerate) {
+//        
+//        NSLog(@"scrollViewDidEndDragging");
+//		[scrollView scrollRectToVisible: CGRectIntegral( CGRectMake(self.offsetBetweenIssues * _currentOffset, 0,
+//                                                                    scrollView.bounds.size.width,
+//                                                                    scrollView.bounds.size.height) )
+//                               animated: YES];
+//	}
 }
 
 
@@ -91,19 +100,19 @@
 
 - (void) transformItemViews {
     
+    NSMutableArray *transformations = [NSMutableArray array];
     NSMutableArray *animatedItems = [NSMutableArray array];
     
     for (UIView *issueView in _scrollview.subviews) {
         
-        // it can be calculated in itemview
+        CGFloat unscaledX = issueView.frame.origin.x - (kIssueItemWidth - issueView.frame.size.width) / 2.0f;
         
         CGFloat offset = [self offsetForItemAtIndex: issueView.tag];
-        
-        if ([issueView respondsToSelector: @selector(calculateTransformationForOffset:)]) {
+        [self transformForItemViewWithOffset: offset
+                                   positionX: unscaledX - _scrollview.contentOffset.x
+                                     itemTag: issueView.tag
+                                    itemView: issueView];
 
-            [((CEFlowContentInfoView*) issueView) calculateTransformationForOffset: offset];
-        }
-                
         if ([issueView respondsToSelector: @selector(shouldBeAnimated)]) {
 
             if (((CEFlowContentInfoView*)issueView).shouldBeAnimated) {
@@ -126,7 +135,7 @@
             
             [UIView animateWithDuration: 0.4f
                                   delay: 0.0f
-                                options: 0.0f //UIViewAnimationOptionBeginFromCurrentState
+                                options: UIViewAnimationOptionBeginFromCurrentState
                              animations: ^{
                 
                 item.layer.transform = item.transform3D;
@@ -136,7 +145,7 @@
                     [_scrollview bringSubviewToFront: item];
                 }
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     
                     NSMutableArray *remainItems = [NSMutableArray array];
                     
@@ -147,11 +156,11 @@
                             [remainItems addObject: animatedItems[remainIndex]];
                         }
                     }
-
+                    
                     [self animateItems: remainItems];
                 });
                 
-            } completion: nil];
+            } completion:nil];
             
             break;
         }
@@ -178,59 +187,66 @@
     return offset;
 }
 
-//- (void)transformForItemViewWithOffset: (CGFloat) offset
-//                              itemView: (UIView*) itemView {
-//    
-//
-//    CGFloat _perspective = -1.0f / 500.0f;
-//    CGSize _viewpointOffset = CGSizeZero;
-//    
-//    CATransform3D transform = CATransform3DIdentity;
-//    transform.m34 = _perspective;
-//    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
-//    
-//    CGFloat tilt = 0.9f;
-//    CGFloat spacing = 0.55f;
-//    
-//    // normalisation for interval [-1.0f; 0.0f] and [0.0f; 1.0f]
-//    CGFloat clampedOffset = fmaxf(-1.0f, fminf(1.0f, offset));
-//    
-//    CGFloat angel = -clampedOffset * M_PI_4 * tilt;
-//    
-//    CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth * 0.5f;
-//    
-//    CGFloat x = (clampedOffset * 0.5f * tilt + offset * spacing) * 365 / 2;
-//    
-//    if ([itemView respondsToSelector: @selector(setClampedOffset:)]) {
-//
-//        [((CEFlowContentInfoView*)itemView) setClampedOffset: clampedOffset];
-//        angel = ((CEFlowContentInfoView*)itemView).clampedOffset * M_PI_4 * tilt;
-//        
-//        z = fabsf(((CEFlowContentInfoView*)itemView).clampedOffset) * -kIssueItemWidth / 3;
-//       
-//        //TODO: REMOVE. calculate in one place
-//        CGFloat test = ((CEFlowContentInfoView*)itemView).clampedOffset;
-//       
-//        if (test == -1) {
-//            
-//            x = -300.0f;
-//        } else if (test == 1) {
-//            
-//            x = 300.0f;
-//        } else {
-//            
-//            x = 0.0f;
-//        }
-//        
-//        x += offset;
-//    }
-//    
-//    transform = CATransform3DTranslate(transform, x, 0.0f, z);
-//    
-//    if ([itemView respondsToSelector: @selector(transform3D)]) {
-//        
-//        ((CEFlowContentInfoView*)itemView).transform3D = CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
-//    }
-//}
+- (void)transformForItemViewWithOffset: (CGFloat) offset
+                                      positionX: (CGFloat) positionX
+                                        itemTag: (NSInteger) tag
+                                       itemView: (UIView*) itemView {
+    
+    CGFloat _perspective = -1.0f / 500.0f;
+    CGSize _viewpointOffset = CGSizeZero;
+    
+    CATransform3D transform = CATransform3DIdentity;
+    transform.m34 = _perspective;
+    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
+    
+    CGFloat tilt = 0.9f;
+    CGFloat spacing = 0.55f;
+    
+    // normalisation for interval [-1.0f; 0.0f] and [0.0f; 1.0f]
+    CGFloat clampedOffset = fmaxf(-1.0f, fminf(1.0f, offset));
+    
+    CGFloat angel = -clampedOffset * M_PI_4 * tilt;
+    
+    CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth * 0.5f;
+    
+    CGFloat x = (clampedOffset * 0.5f * tilt + offset * spacing) * 365 / 2;
+    
+    if ([itemView respondsToSelector: @selector(setClampedOffset:)]) {
+
+        [((CEFlowContentInfoView*)itemView) setClampedOffset: clampedOffset];
+        angel = ((CEFlowContentInfoView*)itemView).clampedOffset * M_PI_4 * tilt;
+        
+        z = fabsf(((CEFlowContentInfoView*)itemView).clampedOffset) * -kIssueItemWidth * 0.5f;
+        
+        CGFloat test = ((CEFlowContentInfoView*)itemView).clampedOffset;
+        if (tag == 0) {
+            
+//                NSLog(@"%f", test);
+        }
+        
+        if (test == -1) {
+            
+            x = -200.0f;
+        } else if (test == 1) {
+            
+            x = 200.0f;
+        } else {
+            
+            x = 0.0f;
+        }
+        
+        x += offset;
+        
+    }
+
+    transform = CATransform3DTranslate(transform, x, 0.0f, z);
+    
+    if ([itemView respondsToSelector: @selector(transform3D)]) {
+        
+        ((CEFlowContentInfoView*)itemView).transform3D = CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
+
+        
+    }
+}
 
 @end

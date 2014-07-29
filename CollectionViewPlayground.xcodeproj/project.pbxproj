@@ -152,6 +152,7 @@
 		BEEB6E15196D511E00BB2AB1 = {
 			isa = PBXGroup;
 			children = (
+				BEB843721981024F00BB5D37 /* CECarouselViewController.h */,
 				BEEB6E72196EA11A00BB2AB1 /* Controllers */,
 				BEEB6E27196D511E00BB2AB1 /* CollectionViewPlayground */,
 				BEEB6E49196D511E00BB2AB1 /* CollectionViewPlaygroundTests */,
@@ -297,7 +298,6 @@
 				BEEB6E3A196D511E00BB2AB1 /* CECollectionViewController.m */,
 				BEEB6E73196EA14200BB2AB1 /* CEFlowViewController.h */,
 				BEEB6E74196EA14200BB2AB1 /* CEFlowViewController.m */,
-				BEB843721981024F00BB5D37 /* CECarouselViewController.h */,
 				BE1EAFE6197D02BE00D87507 /* CECarouselViewController.m */,
 				BE1930291976731A003E4E56 /* CEMainViewController.h */,
 				BE19302A1976731A003E4E56 /* CEMainViewController.m */,

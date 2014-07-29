@@ -19,8 +19,6 @@
 
 @property (nonatomic, assign) CGFloat offsetBetweenIssues;
 
-@property (nonatomic, strong) UIScrollView *scrollview;
-
 // hide it
 
 - (void) decelerationSettled;
