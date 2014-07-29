@@ -393,6 +393,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 // FOR CAROUSEL
 
 - (void)setClampedOffset: (CGFloat) clampedOffset {
+    //TODO: clear code
     
     CGFloat direction = clampedOffset - _nonmormalizedClampedOffset;
     _nonmormalizedClampedOffset = clampedOffset;
@@ -495,6 +496,63 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     _lblTitle.frame = CGRectMake((_imageView.frame.size.width - maxWidth) / 2,
                                  _imageView.frame.origin.y + _imageView.frame.size.height + 15,
                                  maxWidth, _lblTitle.frame.size.height);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Carousel
+#pragma mark -
+#pragma mark - Calculate Transformation
+
+- (void) calculateTransformationForOffset: (CGFloat) offsetFromCenteredItem  {
+    CGFloat _perspective = -1.0f / 500.0f;
+    CGSize _viewpointOffset = CGSizeZero;
+    
+    CATransform3D transform = CATransform3DIdentity;
+    transform.m34 = _perspective;
+    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
+    
+    CGFloat tilt = 0.9f;
+    
+    // normalisation for interval [-1.0f; 0.0f] and [0.0f; 1.0f]
+    CGFloat genericClampedOffset = fmaxf(-1.0f, fminf(1.0f, offsetFromCenteredItem));
+
+    [self setClampedOffset: genericClampedOffset];
+    CGFloat angel = self.clampedOffset * M_PI_4 * tilt;
+    CGFloat z = fabsf(self.clampedOffset) * -kIssueItemWidth / 3;
+    
+    // It should be a constant
+    CGFloat xOffset = 300.0f;
+    CGFloat x = self.clampedOffset * xOffset;// + offsetFromCenteredItem;
+    
+    NSLog(@"\n\nindex %i; first part = %.2f offsetFromCenteredItem %.2f\n = %.2f", self.tag, self.clampedOffset * xOffset, offsetFromCenteredItem, x);
+    
+    transform = CATransform3DTranslate(transform, x, 0.0f, z);
+    self.transform3D = CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
+}
+
+// default
++ (CATransform3D) calculateTransformationForClampedOffset: (CGFloat) clampedOffset {
+
+    // TODO: remove multiply constraints
+    CGFloat _perspective = -1.0f / 500.0f;
+    CGSize _viewpointOffset = CGSizeZero;
+    
+    CATransform3D transform = CATransform3DIdentity;
+    transform.m34 = _perspective;
+    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
+    
+    CGFloat tilt = 0.9f;
+    CGFloat angel = -clampedOffset * M_PI / 4 * tilt;
+    CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth / 3.0f;
+    
+    CGFloat xOffset = -300.0f;
+    CGFloat x = clampedOffset * xOffset;// + offsetFromCenteredItem;
+    
+    NSLog(@"\n\nindex %i; first part = %.2f\n = %.2f", 0, clampedOffset * xOffset, x);
+    
+    transform = CATransform3DTranslate(transform, 100.0f, 0.0f, z);
+    
+    return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
 }
 
 @end
