@@ -133,7 +133,12 @@
                              animations: ^{
                 
                 item.layer.transform = item.transform3D;
-                                
+                
+                                 if (item.tag == 1) {
+                                     
+                                     [CEFlowContentInfoView printTransformMatrix: item.layer.transform];
+                                 }
+                                 
                 if (item.tag == lroundf(_currentOffset)) {
                     
                     [_scrollview bringSubviewToFront: item];

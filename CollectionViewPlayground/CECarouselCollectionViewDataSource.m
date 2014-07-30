@@ -65,10 +65,12 @@
     issueCell.tag = indexPath.item;
     [issueCell.lblTitle setText: [NSString stringWithFormat: @"Issue title %i", ((NSNumber*)_fakeSource[indexPath.item]).integerValue]];
     
-    // TODO: merge it
+    //TODO: move to item method
+    [issueCell setNeedsLayout];
+    [issueCell layoutIfNeeded];
     CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) collectionView.delegate).currentOffset;
-//    [issueCell calculateTransformationForOffset: indexPath.item - currentOffset];
-//    issueCell.layer.transform = issueCell.transform3D;
+    [issueCell calculateTransformationForOffset: indexPath.item - currentOffset];
+    issueCell.layer.transform = issueCell.transform3D;
     
     return issueCell;
 }

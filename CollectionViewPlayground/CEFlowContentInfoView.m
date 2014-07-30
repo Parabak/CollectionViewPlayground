@@ -528,53 +528,40 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     // It should be a constant
     CGFloat xOffset = 200.0f;
     CGFloat x = self.clampedOffset * xOffset;// + offsetFromCenteredItem;
+    CGFloat tx = self.layer.transform.m41;
+    
+//    x = tx == x ? 0.0f : x;
     
     transform = CATransform3DTranslate(transform, x, 0.0f, z);
     self.transform3D = CATransform3DRotate(transform, angle, 0.0f, -1.0f, 0.0f);
-}
-
-// default
-+ (CATransform3D) calculateTransformationForClampedOffset: (CGFloat) clampedOffset tag:(NSInteger) tag {
-
-    // TODO: remove multiply constraints
-    CGFloat _perspective = -1.0f / 500.0f;
-    CGSize _viewpointOffset = CGSizeZero;
     
-    CATransform3D transform = CATransform3DIdentity;
-    transform.m34 = _perspective;
-    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
-    
-    CGFloat tilt = 0.9f;
-    CGFloat angle = -clampedOffset * M_PI / 4 * tilt;
-    CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth / 3.0f;
-    
-    CGFloat xOffset = -200.0f / 2;
-    CGFloat x = clampedOffset * xOffset;// + offsetFromCenteredItem;
-
-//    transform = CATransform3DTranslate(transform, 0.0f, 0.0f, 0.0f);
-//    return CATransform3DRotate(transform, 0.0f, 0.0f, -1.0f, 0.0f);
-    transform = CATransform3DTranslate(transform, 0, 0.0f, z);
-    return CATransform3DRotate(transform, angle, 0.0f, -1.0f, 0.0f);
+    if (self.tag == 1) {
+        
+        NSLog(@"====");
+        NSLog(@"current tx = %f", tx);
+        NSLog(@"new transform3d tx = %f", self.transform3D.m41);
+        NSLog(@"new m41 = %f", transform.m41);
+    }
 }
 
 + (void) printTransformMatrix: (CATransform3D ) transform {
     
     NSLog(@"\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f",
           transform.m11,
-          transform.m12,
-          transform.m13,
-          transform.m14,
           transform.m21,
-          transform.m22,
-          transform.m23,
-          transform.m24,
           transform.m31,
-          transform.m32,
-          transform.m33,
-          transform.m34,
           transform.m41,
+          transform.m12,
+          transform.m22,
+          transform.m32,
           transform.m42,
+          transform.m13,
+          transform.m23,
+          transform.m33,
           transform.m43,
+          transform.m14,
+          transform.m24,
+          transform.m34,
           transform.m44);
 }
 
