@@ -63,8 +63,11 @@ extern NSString *const kProgressBarValue;
 // or it will be better not to ask cell, but use a property of presented model
 - (BOOL) isEnabled;
 
-+ (CATransform3D) calculateTransformationForClampedOffset: (CGFloat) clampedOffset;
++ (CATransform3D) calculateTransformationForClampedOffset: (CGFloat) clampedOffset tag:(NSInteger) tag;
 - (void) calculateTransformationForOffset: (CGFloat) offsetFromCenteredItem;
 
+
+// TODO: remove it
+@property (nonatomic, strong) UIView *centerLine;
 
 @end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -73,11 +73,22 @@
                                     <constraint firstItem="lwZ-tv-Enq" firstAttribute="leading" secondItem="Ipz-Bl-979" secondAttribute="leading" constant="10" id="wpe-jW-2By"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rr4-fH-UNa">
+                                <rect key="frame" x="384" y="5" width="1" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.067839916987028626" green="0.82197680770070047" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="2fs-Dn-1ft"/>
+                                    <constraint firstAttribute="width" constant="1" id="oxu-hG-t04"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="HAY-3e-5a8" firstAttribute="top" secondItem="Ipz-Bl-979" secondAttribute="bottom" id="Cxr-3n-IZ6"/>
+                            <constraint firstAttribute="centerX" secondItem="Rr4-fH-UNa" secondAttribute="centerX" id="Fmu-WZ-qOY"/>
                             <constraint firstItem="Ipz-Bl-979" firstAttribute="top" secondItem="AZA-0w-tYm" secondAttribute="top" id="Jte-76-Ka0"/>
+                            <constraint firstItem="Rr4-fH-UNa" firstAttribute="top" secondItem="AZA-0w-tYm" secondAttribute="top" constant="5" id="OO8-cT-dM4"/>
                             <constraint firstItem="Ipz-Bl-979" firstAttribute="leading" secondItem="AZA-0w-tYm" secondAttribute="leading" id="yWl-aJ-Ylc"/>
                         </constraints>
                     </view>

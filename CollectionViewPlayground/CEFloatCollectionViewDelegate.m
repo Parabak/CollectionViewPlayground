@@ -13,13 +13,15 @@
 @interface CEFloatCollectionViewDelegate () {
     
     CGPoint _middlePoint;
-    CGFloat _currentOffset;
+
     CGFloat _scaleFactor;
     
-    NSIndexPath *selectedIndex;
+ 
 }
 
 - (void) updateCurrentOffset: (UIScrollView*) scrollView;
+
+- (void) openIssue: (UICollectionViewCell*) sender;
 
 @end
 
@@ -36,17 +38,18 @@
 #pragma mark -
 #pragma mark - Collection View delegate
 
+@synthesize selectedIndex = _selectedIndex;
 @synthesize currentOffset = _currentOffset;
 
 - (void)collectionView: (UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (selectedIndex != indexPath) {
+
+    if (self.selectedIndex.item != indexPath.item || self.selectedIndex.section != indexPath.section) {
         
         // issue should be centered
         _currentOffset = indexPath.item;
-                
-        [collectionView scrollRectToVisible: CGRectMake(self.offsetBetweenIssues * _currentOffset, 0, collectionView.frame.size.width, collectionView.frame.size.height)
-                                   animated: YES];
+        
+        [self scrollToOffset];
     } else {
         
         // open issue
@@ -54,12 +57,12 @@
             
             if (cell.tag == indexPath.item && cell.isEnabled) {
                 
-                 NSLog(@"open issue");
+                [self openIssue: cell];
             }
         }
     }
     
-    selectedIndex = indexPath;
+    self.selectedIndex = indexPath;
     
     [_scrollingSettleTimer invalidate];
 	_scrollingSettleTimer = nil;
@@ -80,11 +83,7 @@
     
 	if(!decelerate) {
         
-        NSLog(@"scrollViewDidEndDragging");
-		[scrollView scrollRectToVisible: CGRectIntegral( CGRectMake(self.offsetBetweenIssues * _currentOffset, 0,
-                                                                    scrollView.bounds.size.width,
-                                                                    scrollView.bounds.size.height) )
-                               animated: YES];
+        [self scrollToOffset];
 	}
 }
 
@@ -112,16 +111,23 @@
 
 - (void) decelerationSettled {
     
-	[_scrollview scrollRectToVisible: CGRectIntegral( CGRectMake(self.offsetBetweenIssues * _currentOffset, 0,
-                                                                 _scrollview.frame.size.width,
-                                                                 _scrollview.frame.size.height) )
-                            animated: YES];
+    [self scrollToOffset];
     
 	[_scrollingSettleTimer invalidate];
 	_scrollingSettleTimer = nil;
 }
 
-
+- (void) scrollToOffset {
+    
+    // TODO: _scrollview is nil on start
+    
+//    NSLog(@"scrollToOffset x = %f", self.offsetBetweenIssues * _currentOffset);
+    
+    [_scrollview scrollRectToVisible: CGRectIntegral( CGRectMake(self.offsetBetweenIssues * _currentOffset, 0,
+                                                                 _scrollview.frame.size.width,
+                                                                 _scrollview.frame.size.height) )
+                            animated: YES];
+}
 
 #pragma mark -
 #pragma mark - Private
@@ -131,6 +137,9 @@
 	_middlePoint = CGPointMake(scrollView.contentOffset.x + scrollView.frame.size.width / 2.0f - (kIssueItemWidth / 2), 200);
     
     _currentOffset = lroundf(scrollView.contentOffset.x / self.offsetBetweenIssues);
+    
+    self.selectedIndex = [NSIndexPath indexPathForItem: roundf(_currentOffset) inSection: 0];
+//    NSLog(@"current offset %f, selected index %i", _currentOffset, _selectedIndex.item);
     
 	for(UIView *issueView in [scrollView subviews]) {
         
@@ -148,6 +157,7 @@
 	}
 }
 
+// this should be move out to 'Animation' class
 - (CGFloat) scaleAtPosition: (float) positionX  inScrollView: (UIScrollView *) scrollView forTest: (UIView*) issueTest {
     
     CGFloat halfWidth = scrollView.bounds.size.width / 2.0f;
@@ -164,27 +174,9 @@
 			return 0.5;
 		}
 		else {
-            
-//            positionX - boundary = positionX - halfWidth + distanceToClipFromCenter = 170
-//            NSLog(@"(ositionX - boundary %f",  positionX - boundary);
-     
+    
             CGFloat mainFactor = (0.5 * (positionX - boundary) / (halfWidth - boundary)); // [0.5;1] from 1 to 0.5 firection
-            
-//            if (issueTest.tag == 1) {
-//                
-//                CGFloat factor = mainFactor - 0.5f;
-//                CGFloat diff = mainFactor + powf(factor, 2.0f);
-//                diff = diff > 1.0f ? 1.0f : diff;
-//
-//                NSLog(@"%f\n=====", factor);
-//                
-////                NSLog(@"main scale %f", 1.5f - mainFactor);
-////                NSLog(@"my scale %f", 1.5 - diff);
-////                NSLog(@"delta %f", diff - mainFactor);
-////                NSLog(@"====");
-//                
-//                return 1.5f - diff;
-//            }
+
 
             return 1.5f - mainFactor;
 		}
@@ -203,6 +195,24 @@
     
 	// Shouldnt get here.. Will flip the view if we somehow do
 	return -1.0;
+}
+
+- (void) openIssue:(UICollectionViewCell *)sender {
+    
+    NSLog(@"Open issue with index %i", _selectedIndex.item);
+}
+
+#pragma mark -
+#pragma mark - Properties
+
+- (NSIndexPath *) selectedIndex {
+    
+    if (_selectedIndex == nil) {
+        
+        _selectedIndex = [NSIndexPath indexPathForItem: 0 inSection: 0];
+    }
+    
+    return _selectedIndex;
 }
 
 

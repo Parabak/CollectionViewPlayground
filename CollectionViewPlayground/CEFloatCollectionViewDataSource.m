@@ -19,7 +19,7 @@
     if (self) {
         
         NSMutableArray *numbers = [NSMutableArray array];
-        for (NSInteger index = 0; index < 10; index++) {
+        for (NSInteger index = 0; index < 20; index++) {
             
             [numbers addObject: @(index)];
         }

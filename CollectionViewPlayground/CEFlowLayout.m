@@ -186,7 +186,7 @@ NSString * const kFloatLayoutIssueTitleKind = @"AlbumTitle";
     frame.origin.y = originTitleY;
     frame.size.height = self.titleHeight;
     
-    NSLog(@"%@", NSStringFromCGRect(frame));
+
     
     return frame;
 }
@@ -235,7 +235,7 @@ NSString * const kFloatLayoutIssueTitleKind = @"AlbumTitle";
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"layoutAttributesForItemAtIndexPath");
+//    NSLog(@"layoutAttributesForItemAtIndexPath");
     return self.layoutInfo[kFloatLayoutIssueViewKind][indexPath];
 }
 

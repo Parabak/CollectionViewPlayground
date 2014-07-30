@@ -51,7 +51,7 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
             UICollectionViewLayoutAttributes *itemAttributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath: indexPath];
             
             itemAttributes.frame = [self frameForIssueAtIndexPath: indexPath];
-            itemAttributes.transform3D = [self getTransformationForIndexPath: indexPath];
+//            itemAttributes.transform3D = [self getTransformationForIndexPath: indexPath];
             
             cellLayoutInfo[indexPath] = itemAttributes;
             
@@ -74,8 +74,13 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
 
 - (CGRect) frameForIssueAtIndexPath: (NSIndexPath *) indexPath {
     
-    CGFloat originX = floorf(self.itemInsets.left + kItemsOffset * indexPath.item);
+    CGFloat originX = floorf(self.itemInsets.left + kItemsOffset * indexPath.item); //kItemsOffset
     CGFloat originY = self.itemInsets.top;
+    
+//    if (indexPath.item == 1) {
+//        
+//        NSLog(@"attribute %@", NSStringFromCGRect(CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height)));
+//    }
     
     return CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height);
 }
@@ -104,7 +109,7 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
 }
 
 - (CATransform3D) getTransformationForIndexPath: (NSIndexPath*) indexPath {
-
+    
     CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) self.collectionView.delegate).currentOffset;
     
     CGFloat clampedOffset = 0.0f;
@@ -116,7 +121,7 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
         clampedOffset = 1.0f;
     }
     
-    return [CEFlowContentInfoView calculateTransformationForClampedOffset: clampedOffset];
+    return [CEFlowContentInfoView calculateTransformationForClampedOffset: clampedOffset tag: indexPath.item];
 }
 
 

@@ -99,6 +99,8 @@
     UIView *layoutView;
     if (self.childViewControllers.firstObject == self.flowController) {
         
+              sender.superview.hidden = YES;
+        
         [self.flowController removeFromParentViewController];
         [self.flowController.view removeFromSuperview];
         

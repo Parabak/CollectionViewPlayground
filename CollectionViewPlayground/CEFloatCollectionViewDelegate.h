@@ -13,6 +13,9 @@
     
     NSTimer *_scrollingSettleTimer;
     UIScrollView *_scrollview;
+    
+    CGFloat _currentOffset;
+    NSIndexPath *_selectedIndex;
 }
 
 @property (nonatomic, assign) CGFloat currentOffset;
@@ -21,8 +24,11 @@
 
 @property (nonatomic, strong) UIScrollView *scrollview;
 
-// hide it
+@property (nonatomic, strong) NSIndexPath* selectedIndex;
 
+// hide it
 - (void) decelerationSettled;
+
+
 
 @end

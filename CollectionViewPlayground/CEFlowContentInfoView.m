@@ -11,11 +11,11 @@
 NSString *const kFlowContentInfoViewInendifier = @"IssueFloatCell";
 
 // visible constants
-CGFloat const kIssueItemWidth = 365.0f;
-CGFloat const kIssueItemHeight = 555.0f;
+CGFloat const kIssueItemWidth = 265.0f; // 365
+CGFloat const kIssueItemHeight = 325.0f; // 555
 
 // private constants
-CGFloat const kIssueCoverHeight = 490.0f;
+CGFloat const kIssueCoverHeight = 250;//490.0f;
 CGFloat const kIssueSupplementleHeight = 60.0f;
 CGFloat const kIconsTitlePadding = 5.0f;
 
@@ -67,6 +67,15 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 		[self addSubview:    self.updateIcon];
         [self addSubview:    self.progressView];
 		[self addSubview: self.downloadedIcon];
+        
+        // for test purposes
+        self.centerLine = [[UIView alloc] initWithFrame: CGRectFromString(@"{{0.0f, 0.0f},{2.0f, 80.0f}}")];
+        [self.centerLine setBackgroundColor: [UIColor colorWithRed: 17.0f / 255.0f
+                                                        green:210.0f / 255.0f
+                                                         blue: 1.0f
+                                                        alpha: 1.0f]];
+        
+        [self addSubview: self.centerLine];
     }
     
     return self;
@@ -121,6 +130,8 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     }
     
     [self sizeToFit];
+    
+    [self.centerLine setCenter: _imageView.center];
 }
 
 
@@ -428,12 +439,6 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 
     if (clampedOffset != _clampedOffset) {
         
-        if (self.tag == 1) {
-            
-//            NSLog(@"\nnew value = %f\nold value = %f", clampedOffset, _clampedOffset);
-        }
-        
-//        self.shouldBeAnimated = YES;
         _clampedOffset = clampedOffset;
     }
 }
@@ -517,21 +522,19 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     CGFloat genericClampedOffset = fmaxf(-1.0f, fminf(1.0f, offsetFromCenteredItem));
 
     [self setClampedOffset: genericClampedOffset];
-    CGFloat angel = self.clampedOffset * M_PI_4 * tilt;
+    CGFloat angle = self.clampedOffset * M_PI_4 * tilt;
     CGFloat z = fabsf(self.clampedOffset) * -kIssueItemWidth / 3;
     
     // It should be a constant
-    CGFloat xOffset = 300.0f;
+    CGFloat xOffset = 200.0f;
     CGFloat x = self.clampedOffset * xOffset;// + offsetFromCenteredItem;
     
-    NSLog(@"\n\nindex %i; first part = %.2f offsetFromCenteredItem %.2f\n = %.2f", self.tag, self.clampedOffset * xOffset, offsetFromCenteredItem, x);
-    
     transform = CATransform3DTranslate(transform, x, 0.0f, z);
-    self.transform3D = CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
+    self.transform3D = CATransform3DRotate(transform, angle, 0.0f, -1.0f, 0.0f);
 }
 
 // default
-+ (CATransform3D) calculateTransformationForClampedOffset: (CGFloat) clampedOffset {
++ (CATransform3D) calculateTransformationForClampedOffset: (CGFloat) clampedOffset tag:(NSInteger) tag {
 
     // TODO: remove multiply constraints
     CGFloat _perspective = -1.0f / 500.0f;
@@ -542,39 +545,37 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
     
     CGFloat tilt = 0.9f;
-    CGFloat angel = -clampedOffset * M_PI / 4 * tilt;
+    CGFloat angle = -clampedOffset * M_PI / 4 * tilt;
     CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth / 3.0f;
     
-    CGFloat xOffset = -300.0f;
+    CGFloat xOffset = -200.0f / 2;
     CGFloat x = clampedOffset * xOffset;// + offsetFromCenteredItem;
-    
-    NSLog(@"\n\nindex %i; first part = %.2f\n = %.2f", 0, clampedOffset * xOffset, x);
-    
-    transform = CATransform3DTranslate(transform, 100.0f, 0.0f, z);
-    
-    return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
+
+//    transform = CATransform3DTranslate(transform, 0.0f, 0.0f, 0.0f);
+//    return CATransform3DRotate(transform, 0.0f, 0.0f, -1.0f, 0.0f);
+    transform = CATransform3DTranslate(transform, 0, 0.0f, z);
+    return CATransform3DRotate(transform, angle, 0.0f, -1.0f, 0.0f);
 }
 
-- (void) printTransformMatrix: (UIView *) view {
++ (void) printTransformMatrix: (CATransform3D ) transform {
     
-    NSLog(@"\nTAG %i\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f",
-          view.tag,
-          view.layer.transform.m11,
-          view.layer.transform.m12,
-          view.layer.transform.m13,
-          view.layer.transform.m14,
-          view.layer.transform.m21,
-          view.layer.transform.m22,
-          view.layer.transform.m23,
-          view.layer.transform.m24,
-          view.layer.transform.m31,
-          view.layer.transform.m32,
-          view.layer.transform.m33,
-          view.layer.transform.m34,
-          view.layer.transform.m41,
-          view.layer.transform.m42,
-          view.layer.transform.m43,
-          view.layer.transform.m44);
+    NSLog(@"\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f",
+          transform.m11,
+          transform.m12,
+          transform.m13,
+          transform.m14,
+          transform.m21,
+          transform.m22,
+          transform.m23,
+          transform.m24,
+          transform.m31,
+          transform.m32,
+          transform.m33,
+          transform.m34,
+          transform.m41,
+          transform.m42,
+          transform.m43,
+          transform.m44);
 }
 
 @end

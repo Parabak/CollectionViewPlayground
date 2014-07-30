@@ -12,8 +12,13 @@
 // for test
 #import "CEFloatCollectionViewDelegate.h"
 
-@interface CECarouselCollectionViewDelegate : CEFloatCollectionViewDelegate
+@interface CECarouselCollectionViewDelegate : CEFloatCollectionViewDelegate {
+    
+}
 
 - (void) updateCurrentOffset: (UIScrollView*) scrollView;
+
+// TODO: hide
+- (CGFloat) offsetForItemAtIndex: (NSInteger)index;
 
 @end

@@ -21,7 +21,7 @@
     if (self) {
         
         NSMutableArray *numbers = [NSMutableArray array];
-        for (NSInteger index = 0; index < 10; index++) {
+        for (NSInteger index = 0; index < 20; index++) {
             
             [numbers addObject: @(index)];
         }
@@ -64,9 +64,12 @@
 
     issueCell.tag = indexPath.item;
     [issueCell.lblTitle setText: [NSString stringWithFormat: @"Issue title %i", ((NSNumber*)_fakeSource[indexPath.item]).integerValue]];
-        
-//    issueCell.layer.transform = [self getTransformationForIndexPath: indexPath collectionView: collectionView];
-
+    
+    // TODO: merge it
+    CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) collectionView.delegate).currentOffset;
+//    [issueCell calculateTransformationForOffset: indexPath.item - currentOffset];
+//    issueCell.layer.transform = issueCell.transform3D;
+    
     return issueCell;
 }
 
@@ -89,9 +92,7 @@
 
 
 - (CATransform3D) getTransformationForIndexPath: (NSIndexPath*) indexPath collectionView: (UICollectionView*) collectionView {
-    
-//    NSLog(@"default transformation taken");
-    
+        
     CGFloat _perspective = -1.0f / 500.0f;
     CGSize _viewpointOffset = CGSizeZero;
     

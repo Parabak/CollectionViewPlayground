@@ -37,13 +37,15 @@
 
 @implementation CECarouselCollectionViewDelegate
 
-@synthesize currentOffset = _currentOffset;
-
 
 #pragma mark -
 #pragma mark - Properties
+
 - (CGFloat) offsetBetweenIssues {
-    
+
+//    return 65 + 35;
+//    return (35.0f + 265 / 4);
+//    return (35.0f + 265 / 2) * 0.5;
     return [CECarouselLayout getOffset];
 }
 
@@ -53,37 +55,38 @@
 - (void) updateCurrentOffset: (UIScrollView*) scrollView {
     
     _previousOffset = _currentOffset;
-    _currentOffset = (scrollView.contentOffset.x / self.offsetBetweenIssues);
+    _currentOffset = (scrollView.contentOffset.x / (self.offsetBetweenIssues));
+    
+//    NSLog(@"_currentOffset %f",_currentOffset);
+    
+    self.selectedIndex = [NSIndexPath indexPathForItem: roundf(_currentOffset) inSection: 0];
     
     // TODO: here we should use borders
-    if (_currentOffset >= 0.0f && _currentOffset <= 9) {
+    if (_currentOffset >= 0.0f && _currentOffset <= 19) {
         
         [self transformItemViews];
     }
-
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-
-    [super collectionView: collectionView didSelectItemAtIndexPath: indexPath];
-}
-
-- (void) decelerationSettled {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
-//	[_scrollview scrollRectToVisible: CGRectIntegral( CGRectMake([CECarouselLayout getOffset] * _currentOffset, 0,
-//                                                                 _scrollview.frame.size.width,
-//                                                                 _scrollview.frame.size.height) )
-//                            animated: YES];
-//    
-	[_scrollingSettleTimer invalidate];
-	_scrollingSettleTimer = nil;
-}
-
-- (void) scrollViewDidEndDragging: (UIScrollView *) scrollView willDecelerate: (BOOL) decelerate {
+    [super scrollViewDidScroll: scrollView];
     
-    _scrollview = scrollView;
+//    NSLog(@"did scroll %f", scrollView.contentOffset.x);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Private 
+
+- (void) scrollToOffset {
+    
+    
+    [_scrollview scrollRectToVisible: CGRectIntegral( CGRectMake([self offsetBetweenIssues] * lroundf(_currentOffset), 0,
+                                                                 _scrollview.frame.size.width,
+                                                                 _scrollview.frame.size.height) )
+                            animated: YES];
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -151,7 +154,13 @@
                     [self animateItems: remainItems];
                 });
                 
-            } completion: nil];
+            } completion:^(BOOL finished) {
+                
+                if (item.tag == 0) {
+                    
+//                    NSLog(@"frame %@", NSStringFromCGRect(item.frame));
+                }
+            }];
             
             break;
         }
@@ -159,7 +168,6 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
 #pragma mark - 
 #pragma mark - Calculations
 
@@ -167,8 +175,8 @@
 {
     //calculate relative position
     CGFloat offset = index - _currentOffset;
-
-    CGFloat _numberOfItems = 10.0f;
+    
+    CGFloat _numberOfItems = 20.0f;
 
     if (_numberOfItems == 1)
     {
@@ -178,59 +186,44 @@
     return offset;
 }
 
-//- (void)transformForItemViewWithOffset: (CGFloat) offset
-//                              itemView: (UIView*) itemView {
-//    
-//
-//    CGFloat _perspective = -1.0f / 500.0f;
-//    CGSize _viewpointOffset = CGSizeZero;
-//    
-//    CATransform3D transform = CATransform3DIdentity;
-//    transform.m34 = _perspective;
-//    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
-//    
-//    CGFloat tilt = 0.9f;
-//    CGFloat spacing = 0.55f;
-//    
-//    // normalisation for interval [-1.0f; 0.0f] and [0.0f; 1.0f]
-//    CGFloat clampedOffset = fmaxf(-1.0f, fminf(1.0f, offset));
-//    
-//    CGFloat angel = -clampedOffset * M_PI_4 * tilt;
-//    
-//    CGFloat z = fabsf(clampedOffset) * -kIssueItemWidth * 0.5f;
-//    
-//    CGFloat x = (clampedOffset * 0.5f * tilt + offset * spacing) * 365 / 2;
-//    
-//    if ([itemView respondsToSelector: @selector(setClampedOffset:)]) {
-//
-//        [((CEFlowContentInfoView*)itemView) setClampedOffset: clampedOffset];
-//        angel = ((CEFlowContentInfoView*)itemView).clampedOffset * M_PI_4 * tilt;
-//        
-//        z = fabsf(((CEFlowContentInfoView*)itemView).clampedOffset) * -kIssueItemWidth / 3;
-//       
-//        //TODO: REMOVE. calculate in one place
-//        CGFloat test = ((CEFlowContentInfoView*)itemView).clampedOffset;
-//       
-//        if (test == -1) {
-//            
-//            x = -300.0f;
-//        } else if (test == 1) {
-//            
-//            x = 300.0f;
-//        } else {
-//            
-//            x = 0.0f;
-//        }
-//        
-//        x += offset;
-//    }
-//    
-//    transform = CATransform3DTranslate(transform, x, 0.0f, z);
-//    
-//    if ([itemView respondsToSelector: @selector(transform3D)]) {
-//        
-//        ((CEFlowContentInfoView*)itemView).transform3D = CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
-//    }
-//}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Private Methods
+- (void) openIssue:(UICollectionViewCell *)sender {
+    
+    [self animateTransformsInItem: sender];
+}
+
+// TODO: move out it to 'Animation' class
+- (void) animateTransformsInItem: (UICollectionViewCell *) item {
+    
+    CAKeyframeAnimation *boundsOvershootAnimation = [CAKeyframeAnimation animationWithKeyPath: @"transform"];
+    
+    CATransform3D startingScale = CATransform3DIdentity;
+    CATransform3D undershootScale = CATransform3DTranslate(item.layer.transform, 0.0f, 0.0f, -50.0f);
+    CATransform3D overshootScale = CATransform3DTranslate(item.layer.transform, 0.0f, 0.0f, 300.0f);
+    
+    NSArray *boundsValues = [NSArray arrayWithObjects:[NSValue valueWithCATransform3D:startingScale],
+                             [NSValue valueWithCATransform3D: undershootScale],
+                             [NSValue valueWithCATransform3D :overshootScale], nil];
+    [boundsOvershootAnimation setValues:boundsValues];
+
+    NSArray *times = [NSArray arrayWithObjects:[NSNumber numberWithFloat: 0.0f],
+                                               [NSNumber numberWithFloat: 0.2f],
+                                                [NSNumber numberWithFloat: 1.0f], nil];
+    [boundsOvershootAnimation setKeyTimes:times];
+    [boundsOvershootAnimation setDuration: 0.6f];
+
+    NSArray *timingFunctions = [NSArray arrayWithObjects:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
+                                [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut], nil];
+                      
+    [boundsOvershootAnimation setTimingFunctions:timingFunctions];
+    boundsOvershootAnimation.fillMode = kCAFillModeForwards;
+    boundsOvershootAnimation.removedOnCompletion = YES;
+    
+    [item.superview bringSubviewToFront: item];
+    
+    [item.layer addAnimation: boundsOvershootAnimation forKey: @"bouncing"];
+}
+
 
 @end
