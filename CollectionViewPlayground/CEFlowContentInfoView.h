@@ -49,27 +49,13 @@ extern NSString *const kProgressBarValue;
 
 @property (nonatomic, weak) id <IDGItemViewDelegate> delegate;
 
-// for Carousel
-@property (nonatomic, assign) CGFloat clampedOffset;
-@property (nonatomic, assign) BOOL shouldBeAnimated;
-
-@property (nonatomic, assign) CATransform3D transform3D;
-
-// TODO: Bad Solution
-@property (nonatomic, assign) CAKeyframeAnimation *flippingAnimation;
-@property (nonatomic, strong) NSMutableArray *transformations;
 
 
 // or it will be better not to ask cell, but use a property of presented model
 - (BOOL) isEnabled;
 
-- (void) calculateTransformationForOffset: (CGFloat) offsetFromCenteredItem;
-
-
 // TODO: remove it
 @property (nonatomic, strong) UIView *centerLine;
 
-
-+ (void) printTransformMatrix: (CATransform3D ) transform;
 
 @end

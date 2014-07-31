@@ -9,10 +9,9 @@
 #import "CECarouselCollectionViewDelegate.h"
 
 #import "CECarouselLayout.h"
-#import "CEFlowContentInfoView.h"
+#import "CECarouselItemView.h"
+#import "CECarouselAnimations.h"
 
-#define MIN_TOGGLE_DURATION 0.2
-#define MAX_TOGGLE_DURATION 0.4
 #define SCROLL_DURATION 0.4
 
 @interface CECarouselCollectionViewDelegate () {
@@ -37,17 +36,115 @@
 
 @implementation CECarouselCollectionViewDelegate
 
+@synthesize selectedIndex = _selectedIndex;
+@synthesize currentOffset = _currentOffset;
 
 #pragma mark -
 #pragma mark - Properties
 
 - (CGFloat) offsetBetweenIssues {
 
-//    return 65 + 35;
-//    return (35.0f + 265 / 4);
-//    return (35.0f + 265 / 2) * 0.5;
     return [CECarouselLayout getOffset];
 }
+
+- (NSIndexPath *) selectedIndex {
+    
+    if (_selectedIndex == nil) {
+        
+        _selectedIndex = [NSIndexPath indexPathForItem: 0 inSection: 0];
+    }
+    
+    return _selectedIndex;
+}
+
+#pragma mark -
+#pragma mark - Collection View delegate
+- (void)collectionView: (UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    
+    if (self.selectedIndex.item != indexPath.item || self.selectedIndex.section != indexPath.section) {
+        
+        // issue should be centered
+        _currentOffset = indexPath.item;
+        
+        [self scrollToOffset];
+    } else {
+        
+        // open issue
+        for (CEFlowContentInfoView *cell in collectionView.visibleCells) {
+            
+            if (cell.tag == indexPath.item && cell.isEnabled) {
+                
+                [self openIssue: cell];
+            }
+        }
+    }
+    
+    self.selectedIndex = indexPath;
+    
+    [_scrollingSettleTimer invalidate];
+	_scrollingSettleTimer = nil;
+}
+
+#pragma mark -
+#pragma mark - Scroll View Delegate
+
+- (void) scrollViewDidScroll: (UIScrollView *)scrollView {
+    
+    _scrollview = scrollView;
+    [self updateCurrentOffset: scrollView];
+}
+
+- (void) scrollViewDidEndDragging: (UIScrollView *) scrollView willDecelerate: (BOOL) decelerate {
+    
+    _scrollview = scrollView;
+    
+	if(!decelerate) {
+        
+        [self scrollToOffset];
+	}
+}
+
+- (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView {
+    
+	/*
+	 We cannot call scrollRectToVisible directly here because iOS 6 sends scrollViewDidEndDecelerating even
+	 when the user stops a deceleration animation by dragging in the other direction. Technically, this is correct
+	 since the speed does equal 0 at that point. However, it would cause flickering - see Chili issue #249.
+	 */
+    
+    _scrollview = scrollView;
+    
+	[_scrollingSettleTimer invalidate];
+	_scrollingSettleTimer = [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector: @selector(decelerationSettled) userInfo: nil repeats: NO];
+}
+
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+	
+    _scrollview = scrollView;
+    
+	[_scrollingSettleTimer invalidate];
+	_scrollingSettleTimer = nil;
+}
+
+- (void) decelerationSettled {
+    
+    [self scrollToOffset];
+    
+	[_scrollingSettleTimer invalidate];
+	_scrollingSettleTimer = nil;
+}
+
+- (void) scrollToOffset {
+    
+    NSLog(@"_sc %@", _scrollview);
+    
+    [_scrollview scrollRectToVisible: CGRectIntegral( CGRectMake(self.offsetBetweenIssues * lroundf(_currentOffset), 0,
+                                                                 _scrollview.frame.size.width,
+                                                                 _scrollview.frame.size.height) )
+                            animated: YES];
+}
+
 
 #pragma mark -
 #pragma mark - Scroll View Delegate
@@ -57,35 +154,13 @@
     _previousOffset = _currentOffset;
     _currentOffset = (scrollView.contentOffset.x / (self.offsetBetweenIssues));
     
-//    NSLog(@"_currentOffset %f",_currentOffset);
-    
     self.selectedIndex = [NSIndexPath indexPathForItem: roundf(_currentOffset) inSection: 0];
     
-    // TODO: here we should use borders
-    if (_currentOffset >= 0.0f && _currentOffset <= 19) {
+    CGFloat numberOfItems = [self getNumberOfItems];
+    if (_currentOffset >= 0.0f && _currentOffset <= (numberOfItems - 1)) {
         
         [self transformItemViews];
     }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
-    [super scrollViewDidScroll: scrollView];
-    
-//    NSLog(@"did scroll %f", scrollView.contentOffset.x);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Private 
-
-- (void) scrollToOffset {
-    
-    
-    [_scrollview scrollRectToVisible: CGRectIntegral( CGRectMake([self offsetBetweenIssues] * lroundf(_currentOffset), 0,
-                                                                 _scrollview.frame.size.width,
-                                                                 _scrollview.frame.size.height) )
-                            animated: YES];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,18 +173,15 @@
     
     for (UIView *issueView in _scrollview.subviews) {
         
-        // it can be calculated in itemview
-        
         CGFloat offset = [self offsetForItemAtIndex: issueView.tag];
-        
         if ([issueView respondsToSelector: @selector(calculateTransformationForOffset:)]) {
 
-            [((CEFlowContentInfoView*) issueView) calculateTransformationForOffset: offset];
+            [((CECarouselItemView*) issueView) calculateTransformationForOffset: offset];
         }
                 
         if ([issueView respondsToSelector: @selector(shouldBeAnimated)]) {
 
-            if (((CEFlowContentInfoView*)issueView).shouldBeAnimated) {
+            if (((CECarouselItemView*)issueView).shouldBeAnimated) {
             
                 [animatedItems addObject: issueView];
             }
@@ -123,58 +195,23 @@
     
     for (NSInteger index = 0; index < animatedItems.count; index++) {
         
-        CEFlowContentInfoView *item = animatedItems[index];
+        CECarouselItemView *item = animatedItems[index];
         
-        if (item.shouldBeAnimated && !CATransform3DEqualToTransform(item.layer.transform, item.transform3D)) {
-            
-             NSLog(@"animation %i current x %f", item.tag, item.frame.origin.x);
+        if (item.shouldBeAnimated) {
             
             [UIView animateWithDuration: SCROLL_DURATION
                                   delay: 0.0f
-                                options: 0.0f //UIViewAnimationOptionBeginFromCurrentState
+                                options: 0.0f
                              animations: ^{
                 
                 item.layer.transform = item.transform3D;
                 
-                                 
-                                 
-                                 
                 if (item.tag == lroundf(_currentOffset)) {
                     
                     [_scrollview bringSubviewToFront: item];
                 }
-                
-                                 // TODO remove dispatch
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    
-//                    NSMutableArray *remainItems = [NSMutableArray array];
-//                    
-//                    for (NSInteger remainIndex = index + 1; remainIndex < animatedItems.count; remainIndex++) {
-//                        
-//                        if (remainIndex < animatedItems.count ) {
-//                            
-//                            [remainItems addObject: animatedItems[remainIndex]];
-//                        }
-//                    }
-//
-//                    [self animateItems: remainItems];
-//                });
-                
-            } completion:^(BOOL finished) {
-                
-//                if (item.tag == 0) {
-//                    
-////                    NSLog(@"frame %@", NSStringFromCGRect(item.frame));
-//                }
-            }];
-            
-//            break;
-        } else {
-            
-            if (item.tag == 13) {
-                
-                NSLog(@"NOT animated frame %@", NSStringFromCGRect(item.frame));
-            }
+                                
+            } completion: nil];
         }
     }
 }
@@ -188,9 +225,7 @@
     //calculate relative position
     CGFloat offset = index - _currentOffset;
     
-    CGFloat _numberOfItems = 20.0f;
-
-    if (_numberOfItems == 1)
+    if ([self getNumberOfItems] == 1)
     {
         offset = 0.0f;
     }
@@ -205,36 +240,19 @@
     [self animateTransformsInItem: sender];
 }
 
+- (CGFloat) getNumberOfItems {
+    
+    UICollectionView *castedScrollView = (UICollectionView*) self.scrollview;
+    CGFloat numberOfItems = [castedScrollView.dataSource collectionView: castedScrollView numberOfItemsInSection: 0];
+    
+    return numberOfItems;
+}
+
 // TODO: move out it to 'Animation' class
 - (void) animateTransformsInItem: (UICollectionViewCell *) item {
     
-    CAKeyframeAnimation *boundsOvershootAnimation = [CAKeyframeAnimation animationWithKeyPath: @"transform"];
-    
-    CATransform3D startingScale = CATransform3DIdentity;
-    CATransform3D undershootScale = CATransform3DTranslate(item.layer.transform, 0.0f, 0.0f, -50.0f);
-    CATransform3D overshootScale = CATransform3DTranslate(item.layer.transform, 0.0f, 0.0f, 300.0f);
-    
-    NSArray *boundsValues = [NSArray arrayWithObjects:[NSValue valueWithCATransform3D:startingScale],
-                             [NSValue valueWithCATransform3D: undershootScale],
-                             [NSValue valueWithCATransform3D :overshootScale], nil];
-    [boundsOvershootAnimation setValues:boundsValues];
-
-    NSArray *times = [NSArray arrayWithObjects:[NSNumber numberWithFloat: 0.0f],
-                                               [NSNumber numberWithFloat: 0.2f],
-                                                [NSNumber numberWithFloat: 1.0f], nil];
-    [boundsOvershootAnimation setKeyTimes:times];
-    [boundsOvershootAnimation setDuration: 0.6f];
-
-    NSArray *timingFunctions = [NSArray arrayWithObjects:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
-                                [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut], nil];
-                      
-    [boundsOvershootAnimation setTimingFunctions:timingFunctions];
-    boundsOvershootAnimation.fillMode = kCAFillModeForwards;
-    boundsOvershootAnimation.removedOnCompletion = YES;
-    
-    [item.superview bringSubviewToFront: item];
-    
-    [item.layer addAnimation: boundsOvershootAnimation forKey: @"bouncing"];
+    CAKeyframeAnimation *bouncingAnimation = [CECarouselAnimations bouncingAnimationForItem: item];
+    [item.layer addAnimation: bouncingAnimation forKey: @"bouncing"];
 }
 
 

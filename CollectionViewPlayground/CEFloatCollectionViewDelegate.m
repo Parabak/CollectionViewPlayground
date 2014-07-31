@@ -38,8 +38,6 @@
 #pragma mark -
 #pragma mark - Collection View delegate
 
-@synthesize selectedIndex = _selectedIndex;
-@synthesize currentOffset = _currentOffset;
 
 - (void)collectionView: (UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -119,10 +117,6 @@
 
 - (void) scrollToOffset {
     
-    // TODO: _scrollview is nil on start
-    
-//    NSLog(@"scrollToOffset x = %f", self.offsetBetweenIssues * _currentOffset);
-    
     [_scrollview scrollRectToVisible: CGRectIntegral( CGRectMake(self.offsetBetweenIssues * _currentOffset, 0,
                                                                  _scrollview.frame.size.width,
                                                                  _scrollview.frame.size.height) )
@@ -139,7 +133,6 @@
     _currentOffset = lroundf(scrollView.contentOffset.x / self.offsetBetweenIssues);
     
     self.selectedIndex = [NSIndexPath indexPathForItem: roundf(_currentOffset) inSection: 0];
-//    NSLog(@"current offset %f, selected index %i", _currentOffset, _selectedIndex.item);
     
 	for(UIView *issueView in [scrollView subviews]) {
         

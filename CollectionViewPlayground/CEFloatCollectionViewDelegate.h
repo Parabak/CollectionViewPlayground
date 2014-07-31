@@ -27,7 +27,7 @@
 @property (nonatomic, strong) NSIndexPath* selectedIndex;
 
 // hide it
-- (void) decelerationSettled;
+//- (void) decelerationSettled;
 
 
 

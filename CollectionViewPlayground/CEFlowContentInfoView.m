@@ -39,14 +39,12 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 
 @interface CEFlowContentInfoView () {
 
-    CGFloat _nonmormalizedClampedOffset;
+   
 }
 
 @end
 
 @implementation CEFlowContentInfoView
-
-@synthesize clampedOffset = _clampedOffset;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -132,12 +130,6 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     [self sizeToFit];
     
     [self.centerLine setCenter: _imageView.center];
-    
-    if (!CATransform3DEqualToTransform(self.layer.transform, self.transform3D)
-        && !CATransform3DEqualToTransform(self.transform3D, CATransform3DIdentity)) {
-        
-        self.layer.transform = self.transform3D;
-    }
 }
 
 
@@ -407,80 +399,6 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     return _btnDelete;
 }
 
-// FOR CAROUSEL
-
-- (void)setClampedOffset: (CGFloat) clampedOffset {
-    //TODO: clear code
-    
-    CGFloat direction = clampedOffset - _nonmormalizedClampedOffset;
-    _nonmormalizedClampedOffset = clampedOffset;
-    
-    CGFloat border = 1.0f;
-    if (direction < 0.0f) {
-        
-        if ( clampedOffset <= -0.5f) { // -0.3f
-            
-            clampedOffset = -border;
-        } else if (clampedOffset >= 0.5f){ // 0.7f
-            
-            clampedOffset = border;
-        } else {
-            
-            clampedOffset = 0.0f;
-        }
-        
-    } else {
-        
-        if ( clampedOffset >= -0.5f && clampedOffset <= 0.5f) { // > -0.7f   ... < 0.3f
-            
-            clampedOffset = 0.0f;
-        } else if ( clampedOffset > 0.5f) { // 0.3f
-            
-            clampedOffset = border;
-        } else if ( clampedOffset < -0.5f){ // -0.7f
-            
-            clampedOffset = -border;
-        }
-    }
-
-    if (clampedOffset != _clampedOffset) {
-        
-        _clampedOffset = clampedOffset;
-    }
-}
-
-- (BOOL) shouldBeAnimated {
-    
-    CGFloat tilt = 0.9f;
-    
-    CGFloat calculatedRotationAngel = self.clampedOffset * M_PI_4 * tilt;
-    CGFloat y_inversion = -1.0f;
-    CGFloat realRotationAngel = y_inversion * [(NSNumber *)[self.layer valueForKeyPath:@"transform.rotation.y"] floatValue];
-    
-    CGFloat calculatedTransformX = self.transform3D.m41;
-    CGFloat realTransformX = self.layer.transform.m41;
-    
-    CGFloat fault = 0.01;//0.001f;
-    
-    CGFloat delta = (fabs(calculatedRotationAngel - realRotationAngel));
-    BOOL y_changed = delta > fault;
-    
-    delta = fabsf(calculatedTransformX - realTransformX);
-    fault = 1.5f;
-    BOOL x_changed = delta > fault;
-    
-    CGFloat xOffset = 200.0f;
-    CGFloat x = self.clampedOffset * xOffset;// + offsetFromCenteredItem;
-    CGFloat tx = self.layer.transform.m41;
-    
-//    if (self.tag == 13) {
-//        
-//        NSLog(@"tx = %f x = %f", tx, x);
-//        NSLog(@"%i", (y_changed || x_changed) && tx != x);
-//    }
-    
-    return (y_changed || x_changed) ; //&& tx != x
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - 
@@ -517,57 +435,6 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     _lblTitle.frame = CGRectMake((_imageView.frame.size.width - maxWidth) / 2,
                                  _imageView.frame.origin.y + _imageView.frame.size.height + 15,
                                  maxWidth, _lblTitle.frame.size.height);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Carousel
-#pragma mark -
-#pragma mark - Calculate Transformation
-
-- (void) calculateTransformationForOffset: (CGFloat) offsetFromCenteredItem  {
-    CGFloat _perspective = -1.0f / 500.0f;
-    CGSize _viewpointOffset = CGSizeZero;
-    
-    CATransform3D transform = CATransform3DIdentity;
-    transform.m34 = _perspective;
-    transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
-    
-    CGFloat tilt = 0.9f;
-    
-    // normalisation for interval [-1.0f; 0.0f] and [0.0f; 1.0f]
-    CGFloat genericClampedOffset = fmaxf(-1.0f, fminf(1.0f, offsetFromCenteredItem));
-
-    [self setClampedOffset: genericClampedOffset];
-    CGFloat angle = self.clampedOffset * M_PI_4 * tilt;
-    CGFloat z = fabsf(self.clampedOffset) * -kIssueItemWidth / 3;
-    
-    // It should be a constant
-    CGFloat xOffset = 200.0f;
-   CGFloat x = self.clampedOffset * xOffset;//;
-
-    transform = CATransform3DTranslate(transform, x, 0.0f, z);
-    self.transform3D = CATransform3DRotate(transform, angle, 0.0f, -1.0f, 0.0f);
-}
-
-+ (void) printTransformMatrix: (CATransform3D ) transform {
-    
-    NSLog(@"\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f",
-          transform.m11,
-          transform.m21,
-          transform.m31,
-          transform.m41,
-          transform.m12,
-          transform.m22,
-          transform.m32,
-          transform.m42,
-          transform.m13,
-          transform.m23,
-          transform.m33,
-          transform.m43,
-          transform.m14,
-          transform.m24,
-          transform.m34,
-          transform.m44);
 }
 
 @end

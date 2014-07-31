@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8BD6DC66198A87030066FB71 /* CECarouselAnimations.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD6DC65198A87030066FB71 /* CECarouselAnimations.m */; };
+		8BD6DC69198A8B5B0066FB71 /* CECarouselItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD6DC68198A8B5B0066FB71 /* CECarouselItemView.m */; };
 		BE19302B1976731A003E4E56 /* CEMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE19302A1976731A003E4E56 /* CEMainViewController.m */; };
 		BE19303019768882003E4E56 /* delete_button.png in Resources */ = {isa = PBXBuildFile; fileRef = BE19302C19768882003E4E56 /* delete_button.png */; };
 		BE19303119768882003E4E56 /* delete_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BE19302D19768882003E4E56 /* delete_button@2x.png */; };
@@ -60,6 +62,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8BD6DC64198A87030066FB71 /* CECarouselAnimations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselAnimations.h; sourceTree = "<group>"; };
+		8BD6DC65198A87030066FB71 /* CECarouselAnimations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CECarouselAnimations.m; sourceTree = "<group>"; };
+		8BD6DC67198A8B5B0066FB71 /* CECarouselItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselItemView.h; sourceTree = "<group>"; };
+		8BD6DC68198A8B5B0066FB71 /* CECarouselItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CECarouselItemView.m; sourceTree = "<group>"; };
 		BE1930291976731A003E4E56 /* CEMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CEMainViewController.h; sourceTree = "<group>"; };
 		BE19302A1976731A003E4E56 /* CEMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CEMainViewController.m; sourceTree = "<group>"; };
 		BE19302C19768882003E4E56 /* delete_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete_button.png; sourceTree = "<group>"; };
@@ -149,6 +155,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8BD6DC63198A85770066FB71 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				8BD6DC64198A87030066FB71 /* CECarouselAnimations.h */,
+				8BD6DC65198A87030066FB71 /* CECarouselAnimations.m */,
+			);
+			name = Animations;
+			sourceTree = "<group>";
+		};
 		BEEB6E15196D511E00BB2AB1 = {
 			isa = PBXGroup;
 			children = (
@@ -184,6 +199,7 @@
 		BEEB6E27196D511E00BB2AB1 /* CollectionViewPlayground */ = {
 			isa = PBXGroup;
 			children = (
+				8BD6DC63198A85770066FB71 /* Animations */,
 				BEEB6E69196D908400BB2AB1 /* UIColelctionView Tutorial Models */,
 				BEEB6E62196D676700BB2AB1 /* Delegates */,
 				BEEB6E5E196D590D00BB2AB1 /* Views */,
@@ -258,6 +274,8 @@
 				BEEB6E7D196EADFC00BB2AB1 /* CEIssueFooterReusableView.m */,
 				BEEB6E76196EA18600BB2AB1 /* CEFlowContentInfoView.h */,
 				BEEB6E77196EA18600BB2AB1 /* CEFlowContentInfoView.m */,
+				8BD6DC67198A8B5B0066FB71 /* CECarouselItemView.h */,
+				8BD6DC68198A8B5B0066FB71 /* CECarouselItemView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -418,6 +436,7 @@
 				BE1EAFE7197D02BE00D87507 /* CECarouselViewController.m in Sources */,
 				BEEB6E81196EB4ED00BB2AB1 /* CEFloatCollectionViewDataSource.m in Sources */,
 				BEEB6E75196EA14200BB2AB1 /* CEFlowViewController.m in Sources */,
+				8BD6DC69198A8B5B0066FB71 /* CECarouselItemView.m in Sources */,
 				BEEB6E7B196EAB4900BB2AB1 /* CEFlowLayout.m in Sources */,
 				BEEB6E78196EA18600BB2AB1 /* CEFlowContentInfoView.m in Sources */,
 				BEEB6E2E196D511E00BB2AB1 /* main.m in Sources */,
@@ -428,6 +447,7 @@
 				BEEB6E7E196EADFC00BB2AB1 /* CEIssueFooterReusableView.m in Sources */,
 				BE1EAFED197D111600D87507 /* CECarouselCollectionViewDataSource.m in Sources */,
 				BEEB6E6F196D908400BB2AB1 /* BHPhoto.m in Sources */,
+				8BD6DC66198A87030066FB71 /* CECarouselAnimations.m in Sources */,
 				BEEB6E3B196D511E00BB2AB1 /* CECollectionViewController.m in Sources */,
 				BEEB6E68196D68CD00BB2AB1 /* CECollectionViewDataSource.m in Sources */,
 				BEEB6E6E196D908400BB2AB1 /* BHAlbum.m in Sources */,

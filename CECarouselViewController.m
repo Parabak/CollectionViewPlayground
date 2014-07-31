@@ -9,7 +9,7 @@
 #import "CECarouselViewController.h"
 #import "CECarouselLayout.h"
 #import "CEIssueFooterReusableView.h"
-
+#import "CECarouselItemView.h"
 
 @interface CECarouselViewController ()
 
@@ -38,8 +38,8 @@
     [self.collectionView setDataSource: self.collectionViewDataSource];
     [self.collectionView setDelegate: self.collectionViewDelegate];
     
-    [self.collectionView registerClass: [CEFlowContentInfoView class]
-            forCellWithReuseIdentifier: kFlowContentInfoViewInendifier];
+    [self.collectionView registerClass: [CECarouselItemView class]
+            forCellWithReuseIdentifier: kCarouselItemIdentifier];
     
     [self.collectionView registerClass: [CEIssueFooterReusableView class]
             forSupplementaryViewOfKind: kCarouselLayoutIssueTitleKind

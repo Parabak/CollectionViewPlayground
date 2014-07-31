@@ -60,7 +60,6 @@
     CEFlowContentInfoView *issueCell = [collectionView dequeueReusableCellWithReuseIdentifier: kFlowContentInfoViewInendifier
                                                                                  forIndexPath: indexPath];
 
-    issueCell.transform3D = CATransform3DIdentity;
     issueCell.delegate = self;
     issueCell.tag = indexPath.item;
     issueCell.editMode = self.editMode;
