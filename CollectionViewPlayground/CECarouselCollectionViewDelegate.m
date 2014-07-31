@@ -125,49 +125,56 @@
         
         CEFlowContentInfoView *item = animatedItems[index];
         
-        if (item.shouldBeAnimated) {
+        if (item.shouldBeAnimated && !CATransform3DEqualToTransform(item.layer.transform, item.transform3D)) {
             
-            [UIView animateWithDuration: 0.4f
+             NSLog(@"animation %i current x %f", item.tag, item.frame.origin.x);
+            
+            [UIView animateWithDuration: SCROLL_DURATION
                                   delay: 0.0f
                                 options: 0.0f //UIViewAnimationOptionBeginFromCurrentState
                              animations: ^{
                 
                 item.layer.transform = item.transform3D;
                 
-                                 if (item.tag == 1) {
-                                     
-                                     [CEFlowContentInfoView printTransformMatrix: item.layer.transform];
-                                 }
+                                 
+                                 
                                  
                 if (item.tag == lroundf(_currentOffset)) {
                     
                     [_scrollview bringSubviewToFront: item];
                 }
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                 // TODO remove dispatch
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     
-                    NSMutableArray *remainItems = [NSMutableArray array];
-                    
-                    for (NSInteger remainIndex = index + 1; remainIndex < animatedItems.count; remainIndex++) {
-                        
-                        if (remainIndex < animatedItems.count ) {
-                            
-                            [remainItems addObject: animatedItems[remainIndex]];
-                        }
-                    }
-
-                    [self animateItems: remainItems];
-                });
+//                    NSMutableArray *remainItems = [NSMutableArray array];
+//                    
+//                    for (NSInteger remainIndex = index + 1; remainIndex < animatedItems.count; remainIndex++) {
+//                        
+//                        if (remainIndex < animatedItems.count ) {
+//                            
+//                            [remainItems addObject: animatedItems[remainIndex]];
+//                        }
+//                    }
+//
+//                    [self animateItems: remainItems];
+//                });
                 
             } completion:^(BOOL finished) {
                 
-                if (item.tag == 0) {
-                    
-//                    NSLog(@"frame %@", NSStringFromCGRect(item.frame));
-                }
+//                if (item.tag == 0) {
+//                    
+////                    NSLog(@"frame %@", NSStringFromCGRect(item.frame));
+//                }
             }];
             
-            break;
+//            break;
+        } else {
+            
+            if (item.tag == 13) {
+                
+                NSLog(@"NOT animated frame %@", NSStringFromCGRect(item.frame));
+            }
         }
     }
 }

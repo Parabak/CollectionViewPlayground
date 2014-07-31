@@ -74,9 +74,9 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
     CGFloat originX = floorf(self.itemInsets.left + kItemsOffset * indexPath.item); //kItemsOffset
     CGFloat originY = self.itemInsets.top;
     
-//    if (indexPath.item == 1) {
+//    if (indexPath.item == 13 || indexPath.item == 12 || indexPath.item == 1) {
 //        
-//        NSLog(@"attribute %@", NSStringFromCGRect(CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height)));
+//        NSLog(@"attribute %i %@", indexPath.item, NSStringFromCGRect(CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height)));
 //    }
     
     return CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height);

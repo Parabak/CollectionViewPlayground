@@ -49,13 +49,6 @@
     [self.carouselLayout setupForOrientation: [UIApplication sharedApplication].statusBarOrientation];
 }
 
-//- (void) viewWillLayoutSubviews {
-//    
-//    [super viewWillLayoutSubviews];
-//    self.collectionViewDelegate.scrollview = self.collectionView;
-//    [self.collectionViewDelegate updateCurrentOffset: self.collectionView];
-//}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -80,6 +73,7 @@
     if (collectionViewDelegate == nil) {
         
         collectionViewDelegate = [CECarouselCollectionViewDelegate new];
+        collectionViewDelegate.scrollview = self.collectionView;
     }
     
     return collectionViewDelegate;

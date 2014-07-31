@@ -132,6 +132,12 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     [self sizeToFit];
     
     [self.centerLine setCenter: _imageView.center];
+    
+    if (!CATransform3DEqualToTransform(self.layer.transform, self.transform3D)
+        && !CATransform3DEqualToTransform(self.transform3D, CATransform3DIdentity)) {
+        
+        self.layer.transform = self.transform3D;
+    }
 }
 
 
@@ -463,7 +469,17 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     fault = 1.5f;
     BOOL x_changed = delta > fault;
     
-    return y_changed || x_changed;
+    CGFloat xOffset = 200.0f;
+    CGFloat x = self.clampedOffset * xOffset;// + offsetFromCenteredItem;
+    CGFloat tx = self.layer.transform.m41;
+    
+//    if (self.tag == 13) {
+//        
+//        NSLog(@"tx = %f x = %f", tx, x);
+//        NSLog(@"%i", (y_changed || x_changed) && tx != x);
+//    }
+    
+    return (y_changed || x_changed) ; //&& tx != x
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -527,21 +543,10 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     
     // It should be a constant
     CGFloat xOffset = 200.0f;
-    CGFloat x = self.clampedOffset * xOffset;// + offsetFromCenteredItem;
-    CGFloat tx = self.layer.transform.m41;
-    
-//    x = tx == x ? 0.0f : x;
-    
+   CGFloat x = self.clampedOffset * xOffset;//;
+
     transform = CATransform3DTranslate(transform, x, 0.0f, z);
     self.transform3D = CATransform3DRotate(transform, angle, 0.0f, -1.0f, 0.0f);
-    
-    if (self.tag == 1) {
-        
-        NSLog(@"====");
-        NSLog(@"current tx = %f", tx);
-        NSLog(@"new transform3d tx = %f", self.transform3D.m41);
-        NSLog(@"new m41 = %f", transform.m41);
-    }
 }
 
 + (void) printTransformMatrix: (CATransform3D ) transform {

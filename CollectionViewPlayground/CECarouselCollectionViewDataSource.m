@@ -61,16 +61,17 @@
     
     CEFlowContentInfoView *issueCell = [collectionView dequeueReusableCellWithReuseIdentifier: kFlowContentInfoViewInendifier
                                                                                  forIndexPath: indexPath];
-
+    
     issueCell.tag = indexPath.item;
     [issueCell.lblTitle setText: [NSString stringWithFormat: @"Issue title %i", ((NSNumber*)_fakeSource[indexPath.item]).integerValue]];
     
+    
     //TODO: move to item method
-    [issueCell setNeedsLayout];
-    [issueCell layoutIfNeeded];
-    CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) collectionView.delegate).currentOffset;
-    [issueCell calculateTransformationForOffset: indexPath.item - currentOffset];
-    issueCell.layer.transform = issueCell.transform3D;
+
+        issueCell.clampedOffset = 0;
+
+        CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) collectionView.delegate).currentOffset;
+        [issueCell calculateTransformationForOffset: indexPath.item - currentOffset];
     
     return issueCell;
 }
@@ -129,7 +130,6 @@
     transform = CATransform3DTranslate(transform, x, 0.0f, z);
     
     return CATransform3DRotate(transform, angel, 0.0f, -1.0f, 0.0f);
-    
 }
 
 @end

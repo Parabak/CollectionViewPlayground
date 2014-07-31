@@ -186,8 +186,6 @@ NSString * const kFloatLayoutIssueTitleKind = @"AlbumTitle";
     frame.origin.y = originTitleY;
     frame.size.height = self.titleHeight;
     
-
-    
     return frame;
 }
 
@@ -204,8 +202,10 @@ NSString * const kFloatLayoutIssueTitleKind = @"AlbumTitle";
     return transform;
 }
 
-- (NSArray *)layoutAttributesForElementsInRect: (CGRect)rect
-{
+- (NSArray *)layoutAttributesForElementsInRect: (CGRect)rect {
+    
+//    NSLog(@"layoutAttributesForElementsInRect");
+    
     NSMutableArray *allAttributes = [NSMutableArray arrayWithCapacity: self.layoutInfo.count];
     
     [self.layoutInfo enumerateKeysAndObjectsUsingBlock:^(NSString *elementIdentifier,
