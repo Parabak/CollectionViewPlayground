@@ -204,8 +204,6 @@ NSString * const kFloatLayoutIssueTitleKind = @"AlbumTitle";
 
 - (NSArray *)layoutAttributesForElementsInRect: (CGRect)rect {
     
-//    NSLog(@"layoutAttributesForElementsInRect");
-    
     NSMutableArray *allAttributes = [NSMutableArray arrayWithCapacity: self.layoutInfo.count];
     
     [self.layoutInfo enumerateKeysAndObjectsUsingBlock:^(NSString *elementIdentifier,
@@ -235,7 +233,7 @@ NSString * const kFloatLayoutIssueTitleKind = @"AlbumTitle";
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    NSLog(@"layoutAttributesForItemAtIndexPath");
+
     return self.layoutInfo[kFloatLayoutIssueViewKind][indexPath];
 }
 

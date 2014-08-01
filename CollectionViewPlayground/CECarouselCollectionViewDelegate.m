@@ -17,7 +17,6 @@
 @interface CECarouselCollectionViewDelegate () {
     
     CGFloat _toggle;
-    CGFloat _previousOffset;
 }
 
 @property (nonatomic, strong) NSTimer *timer;
@@ -61,7 +60,6 @@
 #pragma mark - Collection View delegate
 - (void)collectionView: (UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    
     if (self.selectedIndex.item != indexPath.item || self.selectedIndex.section != indexPath.section) {
         
         // issue should be centered
@@ -91,7 +89,9 @@
 
 - (void) scrollViewDidScroll: (UIScrollView *)scrollView {
     
-    _scrollview = scrollView;
+    _rigthScrollingDirection = (scrollView.contentOffset.x - _previousOffset) > 0.0f;
+    _previousOffset = scrollView.contentOffset.x;
+    
     [self updateCurrentOffset: scrollView];
 }
 
@@ -136,10 +136,8 @@
 }
 
 - (void) scrollToOffset {
-    
-    NSLog(@"_sc %@", _scrollview);
-    
-    [_scrollview scrollRectToVisible: CGRectIntegral( CGRectMake(self.offsetBetweenIssues * lroundf(_currentOffset), 0,
+
+    [_scrollview scrollRectToVisible: CGRectIntegral( CGRectMake(self.offsetBetweenIssues * [self normalizedOffset], 0,
                                                                  _scrollview.frame.size.width,
                                                                  _scrollview.frame.size.height) )
                             animated: YES];
@@ -154,7 +152,7 @@
     _previousOffset = _currentOffset;
     _currentOffset = (scrollView.contentOffset.x / (self.offsetBetweenIssues));
     
-    self.selectedIndex = [NSIndexPath indexPathForItem: roundf(_currentOffset) inSection: 0];
+    self.selectedIndex = [NSIndexPath indexPathForItem: [self normalizedOffset] inSection: 0];
     
     CGFloat numberOfItems = [self getNumberOfItems];
     if (_currentOffset >= 0.0f && _currentOffset <= (numberOfItems - 1)) {
@@ -172,8 +170,9 @@
     NSMutableArray *animatedItems = [NSMutableArray array];
     
     for (UIView *issueView in _scrollview.subviews) {
-        
+                
         CGFloat offset = [self offsetForItemAtIndex: issueView.tag];
+        
         if ([issueView respondsToSelector: @selector(calculateTransformationForOffset:)]) {
 
             [((CECarouselItemView*) issueView) calculateTransformationForOffset: offset];
@@ -204,12 +203,12 @@
                                 options: 0.0f
                              animations: ^{
                 
-                item.layer.transform = item.transform3D;
+                                 item.layer.transform = item.transform3D;
                 
-                if (item.tag == lroundf(_currentOffset)) {
+                                 if (item.tag == [self normalizedOffset]) {
                     
-                    [_scrollview bringSubviewToFront: item];
-                }
+                                     [_scrollview bringSubviewToFront: item];
+                                 }
                                 
             } completion: nil];
         }
@@ -223,7 +222,7 @@
 - (CGFloat) offsetForItemAtIndex: (NSInteger)index
 {
     //calculate relative position
-    CGFloat offset = index - _currentOffset;
+    CGFloat offset = index - [self normalizedOffset];//_currentOffset;
     
     if ([self getNumberOfItems] == 1)
     {
@@ -248,12 +247,39 @@
     return numberOfItems;
 }
 
-// TODO: move out it to 'Animation' class
 - (void) animateTransformsInItem: (UICollectionViewCell *) item {
     
     CAKeyframeAnimation *bouncingAnimation = [CECarouselAnimations bouncingAnimationForItem: item];
     [item.layer addAnimation: bouncingAnimation forKey: @"bouncing"];
 }
 
+- (float) normalizedOffset {
+    
+    double intPart = 0.0f;
+    float fractPart = modf((double)_currentOffset, &intPart);
+    
+    CGFloat normalizedOffset = _currentOffset;
+    if (_rigthScrollingDirection) {
+        
+        if (fractPart >= 0.8f) {
+            
+            normalizedOffset = ceilf(_currentOffset);
+        } else {
+            
+            normalizedOffset = floorf(_currentOffset);
+        }
+    } else {
+        
+        if (fractPart <= 0.2f) {
+            
+            normalizedOffset = floorf(_currentOffset);
+        } else {
+            
+            normalizedOffset = ceilf(_currentOffset);
+        }
+    }
+    
+    return normalizedOffset;
+}
 
 @end

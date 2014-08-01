@@ -1,16 +1,17 @@
 //
-//  CECarouselItemView.m
+//  CECarouselFooterView.m
 //  CollectionViewPlayground
 //
-//  Created by Baranouski Aliaksandr on 31/07/14.
+//  Created by Baranouski Aliaksandr on 01/08/14.
 //  Copyright (c) 2014 Сmok. All rights reserved.
 //
 
+#import "CECarouselFooterView.h"
 #import "CECarouselItemView.h"
 
-NSString *const kCarouselItemIdentifier = @"IssueCarouselCell";
+NSString * const kCarouselSupplementaryItemIdentifier = @"CarouselSupplementaryItemIdentifier";
 
-@implementation CECarouselItemView
+@implementation CECarouselFooterView
 
 @synthesize clampedOffset = _clampedOffset;
 
@@ -41,17 +42,14 @@ NSString *const kCarouselItemIdentifier = @"IssueCarouselCell";
     CGFloat direction = clampedOffset - _nonmormalizedClampedOffset;
     _nonmormalizedClampedOffset = clampedOffset;
     
-    CGFloat test = _clampedOffset;
-    
     CGFloat border = 1.0f;
-    CGFloat offsetTriggerValue = 0.8f; // it's value in percents. Means the distance between item and center position.
-    
+    //TODO: clear code
     if (direction < 0.0f) {
-        
-        if ( clampedOffset <= -0.8f) {
+        // 0.5
+        if ( clampedOffset <= -0.5f) { // -0.3f
             
             clampedOffset = -border;
-        } else if (clampedOffset > 0.2f){
+        } else if (clampedOffset > 0.5f){ // 0.7f
             
             clampedOffset = border;
         } else {
@@ -61,15 +59,15 @@ NSString *const kCarouselItemIdentifier = @"IssueCarouselCell";
         
     } else {
         
-        if ( clampedOffset >= 0.8f) {
-            
-            clampedOffset = border;
-        } else if ( clampedOffset <= -0.2f){
-            
-            clampedOffset = -border;
-        } else {
+        if ( clampedOffset >= -0.5f && clampedOffset <= 0.5f) { // > -0.7f   ... < 0.3f
             
             clampedOffset = 0.0f;
+        } else if ( clampedOffset > 0.5f) { // 0.3f
+            
+            clampedOffset = border;
+        } else if ( clampedOffset < -0.5f){ // -0.7f
+            
+            clampedOffset = -border;
         }
     }
     
@@ -130,5 +128,6 @@ NSString *const kCarouselItemIdentifier = @"IssueCarouselCell";
     transform = CATransform3DTranslate(transform, x, 0.0f, z);
     self.transform3D = CATransform3DRotate(transform, angle, 0.0f, -1.0f, 0.0f);
 }
+
 
 @end

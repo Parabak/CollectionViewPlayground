@@ -8,7 +8,7 @@
 
 #import "CECarouselCollectionViewDataSource.h"
 #import "CECarouselItemView.h"
-#import "CEIssueFooterReusableView.h"
+#import "CECarouselFooterView.h"
 
 #import "CECarouselCollectionViewDelegate.h"
 
@@ -75,17 +75,27 @@
     return issueCell;
 }
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
-           viewForSupplementaryElementOfKind:(NSString *)kind
-                                 atIndexPath:(NSIndexPath *)indexPath;
-{
-    CEIssueFooterReusableView *titleView = [collectionView dequeueReusableSupplementaryViewOfKind: kind
-                                                                              withReuseIdentifier: kIssueTitleIdentifier
-                                                                                     forIndexPath: indexPath];
-    
-    titleView.titleLabel.text = [NSString stringWithFormat: @"reusable view. index %i", indexPath.item];
-    
-    return titleView;
-}
+//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
+//           viewForSupplementaryElementOfKind:(NSString *)kind
+//                                 atIndexPath:(NSIndexPath *)indexPath;
+//{
+//    CECarouselFooterView *titleView = [collectionView dequeueReusableSupplementaryViewOfKind: kind
+//                                                                         withReuseIdentifier: kCarouselSupplementaryItemIdentifier
+//                                                                                forIndexPath: indexPath];
+//    
+//    titleView.tag = indexPath.item;
+//    
+//    titleView.layer.anchorPoint = CGPointMake(titleView.frame.size.width, 0.0f);
+//    
+//    titleView.titleLabel.text = [NSString stringWithFormat: @"reusable view. index %i", indexPath.item];
+//    
+//    //TODO: move to item method
+//    titleView.clampedOffset = 0;
+//    
+//    CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) collectionView.delegate).currentOffset;
+//    [titleView calculateTransformationForOffset: indexPath.item - currentOffset];
+//    
+//    return titleView;
+//}
 
 @end

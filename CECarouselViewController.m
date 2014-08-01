@@ -8,7 +8,7 @@
 
 #import "CECarouselViewController.h"
 #import "CECarouselLayout.h"
-#import "CEIssueFooterReusableView.h"
+#import "CECarouselFooterView.h"
 #import "CECarouselItemView.h"
 
 @interface CECarouselViewController ()
@@ -41,10 +41,10 @@
     [self.collectionView registerClass: [CECarouselItemView class]
             forCellWithReuseIdentifier: kCarouselItemIdentifier];
     
-    [self.collectionView registerClass: [CEIssueFooterReusableView class]
-            forSupplementaryViewOfKind: kCarouselLayoutIssueTitleKind
-                   withReuseIdentifier: kIssueTitleIdentifier];
-        
+//    [self.collectionView registerClass: [CECarouselFooterView class]
+//            forSupplementaryViewOfKind: kCarouselLayoutSupplementaryKind
+//                   withReuseIdentifier: kCarouselSupplementaryItemIdentifier];
+    
     self.carouselLayout = (CECarouselLayout*) self.collectionViewLayout;
     [self.carouselLayout setupForOrientation: [UIApplication sharedApplication].statusBarOrientation];
 }

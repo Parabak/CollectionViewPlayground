@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B255835198B83AD00B7B96A /* CECarouselFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B255834198B83AD00B7B96A /* CECarouselFooterView.m */; };
 		8BD6DC66198A87030066FB71 /* CECarouselAnimations.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD6DC65198A87030066FB71 /* CECarouselAnimations.m */; };
 		8BD6DC69198A8B5B0066FB71 /* CECarouselItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD6DC68198A8B5B0066FB71 /* CECarouselItemView.m */; };
 		BE19302B1976731A003E4E56 /* CEMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE19302A1976731A003E4E56 /* CEMainViewController.m */; };
@@ -62,6 +63,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8B255833198B83AD00B7B96A /* CECarouselFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselFooterView.h; sourceTree = "<group>"; };
+		8B255834198B83AD00B7B96A /* CECarouselFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CECarouselFooterView.m; sourceTree = "<group>"; };
 		8BD6DC64198A87030066FB71 /* CECarouselAnimations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselAnimations.h; sourceTree = "<group>"; };
 		8BD6DC65198A87030066FB71 /* CECarouselAnimations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CECarouselAnimations.m; sourceTree = "<group>"; };
 		8BD6DC67198A8B5B0066FB71 /* CECarouselItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselItemView.h; sourceTree = "<group>"; };
@@ -270,12 +273,14 @@
 			children = (
 				BEEB6E5F196D594500BB2AB1 /* CEGridIssueCell.h */,
 				BEEB6E60196D594500BB2AB1 /* CEGridIssueCell.m */,
-				BEEB6E7C196EADFC00BB2AB1 /* CEIssueFooterReusableView.h */,
-				BEEB6E7D196EADFC00BB2AB1 /* CEIssueFooterReusableView.m */,
 				BEEB6E76196EA18600BB2AB1 /* CEFlowContentInfoView.h */,
 				BEEB6E77196EA18600BB2AB1 /* CEFlowContentInfoView.m */,
 				8BD6DC67198A8B5B0066FB71 /* CECarouselItemView.h */,
 				8BD6DC68198A8B5B0066FB71 /* CECarouselItemView.m */,
+				BEEB6E7C196EADFC00BB2AB1 /* CEIssueFooterReusableView.h */,
+				BEEB6E7D196EADFC00BB2AB1 /* CEIssueFooterReusableView.m */,
+				8B255833198B83AD00B7B96A /* CECarouselFooterView.h */,
+				8B255834198B83AD00B7B96A /* CECarouselFooterView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -447,6 +452,7 @@
 				BEEB6E7E196EADFC00BB2AB1 /* CEIssueFooterReusableView.m in Sources */,
 				BE1EAFED197D111600D87507 /* CECarouselCollectionViewDataSource.m in Sources */,
 				BEEB6E6F196D908400BB2AB1 /* BHPhoto.m in Sources */,
+				8B255835198B83AD00B7B96A /* CECarouselFooterView.m in Sources */,
 				8BD6DC66198A87030066FB71 /* CECarouselAnimations.m in Sources */,
 				BEEB6E3B196D511E00BB2AB1 /* CECollectionViewController.m in Sources */,
 				BEEB6E68196D68CD00BB2AB1 /* CECollectionViewDataSource.m in Sources */,

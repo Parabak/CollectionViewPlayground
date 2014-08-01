@@ -18,7 +18,10 @@
     UIScrollView *_scrollview;
     
     CGFloat _currentOffset;
+    CGFloat _previousOffset;
     NSIndexPath *_selectedIndex;
+    
+    BOOL _rigthScrollingDirection;
 }
 
 @property (nonatomic, strong) UIScrollView *scrollview;

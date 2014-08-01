@@ -14,7 +14,7 @@ CGFloat const kItemsOffset = 100.0f;
 CGFloat const kSupplementaryItemHeight = 60.0f;
 
 NSString * const kCarouselLayoutIssueViewKind = @"IssueCarouselView";
-NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
+NSString * const kCarouselLayoutSupplementaryKind = @"IssueCarouselTitle";
 
 @interface CECarouselLayout ()
 
@@ -53,15 +53,15 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
             itemAttributes.frame = [self frameForIssueAtIndexPath: indexPath];
             cellLayoutInfo[indexPath] = itemAttributes;
                         
-            UICollectionViewLayoutAttributes *titleAttributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind: kCarouselLayoutIssueTitleKind
+            UICollectionViewLayoutAttributes *titleAttributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind: kCarouselLayoutSupplementaryKind
                                                                                                                                withIndexPath: indexPath];
-            titleAttributes.frame = [self frameForIssueTitleAtIndexPath: indexPath];
+            titleAttributes.frame = [self frameForSupplementaryViewAtIndexPath: indexPath];
             titleLayoutInfo[indexPath] = titleAttributes;
         }
     }
     
     newLayoutInfo[kCarouselLayoutIssueViewKind] = cellLayoutInfo;
-    newLayoutInfo[kCarouselLayoutIssueTitleKind] = titleLayoutInfo;
+    newLayoutInfo[kCarouselLayoutSupplementaryKind] = titleLayoutInfo;
     
     self.layoutInfo = newLayoutInfo;
 }
@@ -74,21 +74,14 @@ NSString * const kCarouselLayoutIssueTitleKind = @"IssueCarouselTitle";
     CGFloat originX = floorf(self.itemInsets.left + kItemsOffset * indexPath.item); //kItemsOffset
     CGFloat originY = self.itemInsets.top;
     
-//    if (indexPath.item == 13 || indexPath.item == 12 || indexPath.item == 1) {
-//        
-//        NSLog(@"attribute %i %@", indexPath.item, NSStringFromCGRect(CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height)));
-//    }
-    
     return CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height);
 }
 
-- (CGRect) frameForIssueTitleAtIndexPath:(NSIndexPath *)indexPath
+- (CGRect) frameForSupplementaryViewAtIndexPath:(NSIndexPath *)indexPath
 {
     CGRect frame = [self frameForIssueAtIndexPath:indexPath];
-//    CGAffineTransform affineTransformation = [self tranformationForIssueAtIndexPath: indexPath];
     
     CGFloat centerY = frame.origin.y + frame.size.height;
-//    CGFloat originTitleY = centerY + frame.size.height * affineTransformation.a / 2.0f;
     
     frame.origin.y = centerY;
     frame.size.height = self.titleHeight;

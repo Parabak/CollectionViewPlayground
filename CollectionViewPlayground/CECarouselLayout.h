@@ -12,7 +12,7 @@
 //extern CGFloat const kTitleHeight;
 //
 extern NSString * const kCarouselLayoutIssueViewKind;
-extern NSString * const kCarouselLayoutIssueTitleKind;
+extern NSString * const kCarouselLayoutSupplementaryKind;
 
 @interface CECarouselLayout : CEFlowLayout
 
