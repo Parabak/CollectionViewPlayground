@@ -98,9 +98,7 @@
     
     UIView *layoutView;
     if (self.childViewControllers.firstObject == self.flowController) {
-        
-              sender.superview.hidden = YES;
-        
+                
         [self.flowController removeFromParentViewController];
         [self.flowController.view removeFromSuperview];
         
@@ -126,13 +124,18 @@
 
 - (IBAction)toggleEditMode:(UIButton *)sender {
     
-    // perhaps, will be better no to use data source instance from here
-    [self.flowController.collectionViewDataSource setEditMode: !self.flowController.collectionViewDataSource.editMode];
-    
-    [self.flowController.collectionView reloadData];
+    // perhaps, will be better not to use data source instance from here
+    if (self.childViewControllers.firstObject == self.flowController) {
+        
+        [self.flowController.collectionViewDataSource setEditMode: !self.flowController.collectionViewDataSource.editMode];
+        
+        [self.flowController.collectionView reloadData];
+    } else {
+        
+        [self.carouselController.collectionViewDataSource setEditMode: !self.carouselController.collectionViewDataSource.editMode];
+        [self.carouselController.collectionView reloadData];
+    }
 }
-
-
 
 - (IBAction)showProgress:(id)sender {
     
@@ -146,6 +149,7 @@
         test += 0.7f;
     }
 
+    //TODO: use model and KVO instead of notifications
     NSInteger centeredItem = self.flowController.collectionViewDelegate.currentOffset;
     NSDictionary *userInfo =  @{ kDownloadingItemIndex : @(centeredItem),
                                  kProgressBarValue : @(test)};

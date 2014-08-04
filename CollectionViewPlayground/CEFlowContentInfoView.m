@@ -64,7 +64,17 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 		[self addSubview:    self.lblTitle];
 		[self addSubview:    self.updateIcon];
         [self addSubview:    self.progressView];
-		[self addSubview: self.downloadedIcon];
+		[self addSubview:    self.downloadedIcon];
+        [self addSubview:    self.deleteIconButton];
+        [self addSubview:    self.btnDelete];
+        
+        if (!MINIsRetina()) {
+            
+            [_deleteIconButton.layer setShouldRasterize: YES];
+            [_deleteIconButton.layer setRasterizationScale: 3.0f];
+        }
+        
+        [self.layer setMinificationFilter: kCAFilterTrilinear];
         
         // for test purposes
         self.centerLine = [[UIView alloc] initWithFrame: CGRectFromString(@"{{0.0f, 0.0f},{2.0f, 80.0f}}")];
@@ -116,7 +126,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 //    BOOL isUpdateIconVisible = (_updateIcon.image != nil && _updateIcon.hidden == NO);
     BOOL isDownloadedIconVisible = (_downloadedIcon.image != nil && _downloadedIcon.hidden == NO);
 //    BOOL isIconVisible = isUpdateIconVisible || isDownloadedIconVisible || _deleteIconButton.superview;
-    BOOL isIconVisible  = _deleteIconButton.superview != nil;
+    BOOL isIconVisible  = !_deleteIconButton.hidden;
     
     if (isIconVisible || isDownloadedIconVisible) {
         
@@ -178,8 +188,8 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 
 - (void) hideAllDeleteStuff {
     
-    [_btnDelete removeFromSuperview];
-    [_deleteIconButton removeFromSuperview];
+    [_btnDelete setHidden: YES];
+    [_deleteIconButton setHidden: YES];
 }
 
 - (void) removeDeleteButtonRecognizer: (UITapGestureRecognizer *) recognizer {
@@ -268,6 +278,12 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
         _imageView = [[UIImageView alloc] init];
         //        _imageView.layer.borderWidth = [StyleSheet shared].idgItemBorderWidth;
         //		_imageView.layer.borderColor = [StyleSheet shared].idgItemBorderColor.CGColor;
+        _imageView.layer.borderWidth = 2.0f;
+		_imageView.layer.borderColor = [UIColor colorWithRed: 223.0f / 255.0f
+                                                       green:223.0f / 255.0f
+                                                        blue:223.0f / 255.0f
+                                                       alpha: 1.0f].CGColor;
+        
         _imageView.clipsToBounds = YES;
         _imageView.userInteractionEnabled = YES;
         _imageView.contentMode = UIViewContentModeScaleToFill;
@@ -404,7 +420,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 
 - (void) layoutWithVisibleIcons {
     
-    CGFloat maxWidth = imageViewSize.width;// - (_downloadedIcon.frame.size.width + _downloadedIcon.frame.size.width / 2.0);
+    CGFloat maxWidth = imageViewSize.width - (_downloadedIcon.frame.size.width + _downloadedIcon.frame.size.width / 2.0);
     
     CGFloat actualWidth = MIN(maxWidth, _lblTitle.frame.size.width);
     
@@ -416,14 +432,20 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
                                    _updateIcon.frame.size.width, _updateIcon.frame.size.height);
     _downloadedIcon.center = _updateIcon.center;
     
-    if (_deleteIconButton.superview) {
-        
-        _deleteIconButton.center = _updateIcon.center;
-    }
+
+    _deleteIconButton.center = _updateIcon.center;
     
-    _lblTitle.frame = CGRectMake(_updateIcon.frame.origin.x + _updateIcon.frame.size.width + _updateIcon.frame.size.width / 2,
-                                 _imageView.frame.origin.y + _imageView.frame.size.height + 15,
-                                 actualWidth, _lblTitle.frame.size.height);
+    if (_deleteIconButton.hidden) {
+    
+        _lblTitle.frame = CGRectMake(_updateIcon.frame.origin.x + _updateIcon.frame.size.width + _updateIcon.frame.size.width / 2,
+                                     _imageView.frame.origin.y + _imageView.frame.size.height + 15,
+                                     actualWidth, _lblTitle.frame.size.height);
+    } else {
+        
+        _lblTitle.frame = CGRectMake(_deleteIconButton.frame.origin.x + _deleteIconButton.frame.size.width + _deleteIconButton.frame.size.width / 2,
+                                     _imageView.frame.origin.y + _imageView.frame.size.height + 15,
+                                     actualWidth, _lblTitle.frame.size.height);
+    }
 }
 
 - (void) layoutTitleLable {

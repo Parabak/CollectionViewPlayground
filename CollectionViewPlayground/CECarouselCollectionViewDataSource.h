@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CEFlowContentInfoView.h"
 
-@interface CECarouselCollectionViewDataSource : NSObject <UICollectionViewDataSource>{
+@interface CECarouselCollectionViewDataSource : NSObject <UICollectionViewDataSource, IDGItemViewDelegate>{
     
     // is equall to total issues count
     NSInteger _columnsCount;
@@ -17,6 +18,9 @@
     // should be replaced by delegate
     UICollectionView *_collectionView;
 }
+
+// for demonstrate
+@property (nonatomic, assign) BOOL editMode;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSInteger) getColumnsCount;

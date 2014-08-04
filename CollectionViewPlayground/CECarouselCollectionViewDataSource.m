@@ -8,7 +8,6 @@
 
 #import "CECarouselCollectionViewDataSource.h"
 #import "CECarouselItemView.h"
-#import "CECarouselFooterView.h"
 #import "CECarouselCollectionViewDelegate.h"
 
 #import "CEIssue.h"
@@ -80,9 +79,44 @@
                                                                                  forIndexPath: indexPath];
     
     issueCell.tag = indexPath.item;
+    issueCell.delegate = self;
+    issueCell.editMode = self.editMode;
+    
     [issueCell.lblTitle setText: [NSString stringWithFormat: @"Issue title %i", indexPath.item]];
+    [self loadIssuePreviewForView: issueCell atIndexPath: indexPath];
+
+    issueCell.clampedOffset = 0;
+    CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) collectionView.delegate).currentOffset;
+    [issueCell calculateTransformationForOffset: indexPath.item - currentOffset];
+    
+    return issueCell;
+}
+
+#pragma mark -
+#pragma mark - IDGItemViewDelegate
+
+- (void) itemViewDeleteButtonTouched:(NSInteger)index {
+    
+    NSMutableArray *issues = [NSMutableArray arrayWithArray: _fakeSource];
+    if (issues.count > index) {
+        
+        [issues removeObjectAtIndex: index];
+        _fakeSource = [NSArray arrayWithArray: issues];
+        
+        [_collectionView reloadData];
+    }
+}
+
+#pragma mark - Test section
+
+- (void) loadIssuePreviewForView: (CECarouselItemView *) issueCell atIndexPath: (NSIndexPath *) indexPath {
     
     CEIssue *issue = _fakeSource[indexPath.item];
+    
+    if ([issue.issuePreview.imageURL.absoluteString isEqualToString: issueCell.presentedImageURL]) {
+        
+        return;
+    }
     
     // load photo images in the background
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
@@ -91,24 +125,15 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             issueCell.imageView.image = image;
-            
+            issueCell.presentedImageURL = issue.issuePreview.imageURL.absoluteString;
         });
     }];
+    
     operation.queuePriority = (indexPath.item == 0) ?
     NSOperationQueuePriorityHigh : NSOperationQueuePriorityNormal;
     [self.thumbnailQueue addOperation:operation];
-    
-    //TODO: move to item method
-    issueCell.clampedOffset = 0;
-
-    CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) collectionView.delegate).currentOffset;
-    [issueCell calculateTransformationForOffset: indexPath.item - currentOffset];
-    
-    return issueCell;
 }
 
-
-#pragma mark - Test section
 - (NSString *) getURLStringForIndex: (NSInteger) index {
     
     NSArray *urlsStrings = @[

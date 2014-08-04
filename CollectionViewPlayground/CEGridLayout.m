@@ -52,6 +52,9 @@ NSString * const kIssueLayoutAlbumTitleKind = @"AlbumTitle";
     // TODO: use constants
     self.itemInsets = UIEdgeInsetsMake(22.0f, 22.0f, 13.0f, 22.0f);
     self.itemSize = CGSizeMake(125.0f, 125.0f);
+//#define CELL_IPHONE_WIDTH	133.0f
+//#define CELL_IPHONE_HEIGHT	200.0f
+    
     self.interItemSpacingY = 12.0f;
     self.numberOfColumns = 2;
     self.titleHeight = 26.0f;

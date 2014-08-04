@@ -15,4 +15,5 @@
 - (IBAction)showProgress:(id)sender;
 
 - (IBAction)switchLayouts:(UIButton *)sender;
+
 @end

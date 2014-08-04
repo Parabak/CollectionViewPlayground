@@ -20,6 +20,8 @@ extern NSString *const kCarouselItemIdentifier;
 @property (nonatomic, assign) BOOL shouldBeAnimated;
 @property (nonatomic, assign) CATransform3D transform3D;
 
+//For demostration
+@property (nonatomic, strong) NSString *presentedImageURL;
 
 - (void) calculateTransformationForOffset: (CGFloat) offsetFromCenteredItem;
 

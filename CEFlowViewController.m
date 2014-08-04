@@ -71,6 +71,7 @@
     if (collectionViewDelegate == nil) {
         
         collectionViewDelegate = [CEFloatCollectionViewDelegate new];
+        collectionViewDelegate.scrollview = self.collectionView;
     }
     
     return collectionViewDelegate;
