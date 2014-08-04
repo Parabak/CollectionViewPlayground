@@ -10,6 +10,8 @@
 #import "CECarouselLayout.h"
 #import "CECarouselFooterView.h"
 #import "CECarouselItemView.h"
+#import "CECarouselAnimations.h"
+
 
 @interface CECarouselViewController ()
 
@@ -74,6 +76,7 @@
         
         collectionViewDelegate = [CECarouselCollectionViewDelegate new];
         collectionViewDelegate.scrollview = self.collectionView;
+        collectionViewDelegate.delegate = self;
     }
     
     return collectionViewDelegate;
@@ -85,5 +88,30 @@
     [self.carouselLayout setupForOrientation: toInterfaceOrientation];
 }
 
+
+#pragma mark -
+#pragma mark - CECarouselSelectionDelegate
+
+- (void)itemSelectedAtIndexPath:(NSIndexPath *)indexPath {
+    
+    CGFloat timing = kBounceAnimationDuration - 0.15f; // we will not waiting the completion of animation
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timing * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    
+        UIViewController *test = [[UIViewController alloc] init];
+        [test.view setFrame: self.view.frame];
+        [test.view setBackgroundColor: [UIColor whiteColor]];
+        
+        [test setModalPresentationStyle: UIModalPresentationCurrentContext];
+        [test setModalTransitionStyle: UIModalTransitionStyleCrossDissolve];
+        
+        [self presentViewController: test animated: YES completion:^{
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                [self dismissViewControllerAnimated: YES completion: nil];
+            });
+        }];
+    });
+}
 
 @end

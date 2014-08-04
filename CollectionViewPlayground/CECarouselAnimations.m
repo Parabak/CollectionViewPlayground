@@ -8,6 +8,8 @@
 
 #import "CECarouselAnimations.h"
 
+CGFloat const kBounceAnimationDuration = 0.6f;
+
 @implementation CECarouselAnimations
 
 + (CAKeyframeAnimation*) bouncingAnimationForItem: (UIView*) item {
@@ -16,7 +18,8 @@
     
     CATransform3D startingScale = CATransform3DIdentity;
     CATransform3D undershootScale = CATransform3DTranslate(item.layer.transform, 0.0f, 0.0f, -50.0f);
-    CATransform3D overshootScale = CATransform3DTranslate(item.layer.transform, 0.0f, 0.0f, 300.0f);
+    BOOL landscapeOrientation = UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
+    CATransform3D overshootScale = CATransform3DTranslate(item.layer.transform, 0.0f, 0.0f, landscapeOrientation ? 375.0f : 315.0f);
     
     NSArray *boundsValues = [NSArray arrayWithObjects:[NSValue valueWithCATransform3D:startingScale],
                              [NSValue valueWithCATransform3D: undershootScale],

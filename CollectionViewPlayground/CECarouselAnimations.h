@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern CGFloat const kBounceAnimationDuration;
+
 @interface CECarouselAnimations : NSObject
 
 + (CAKeyframeAnimation*) bouncingAnimationForItem: (UIView*) item;

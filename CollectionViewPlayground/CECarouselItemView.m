@@ -8,6 +8,7 @@
 
 #import "CECarouselItemView.h"
 
+CGFloat const kOffsetTriggerValue = 0.8f;
 NSString *const kCarouselItemIdentifier = @"IssueCarouselCell";
 
 @implementation CECarouselItemView
@@ -41,17 +42,14 @@ NSString *const kCarouselItemIdentifier = @"IssueCarouselCell";
     CGFloat direction = clampedOffset - _nonmormalizedClampedOffset;
     _nonmormalizedClampedOffset = clampedOffset;
     
-    CGFloat test = _clampedOffset;
-    
     CGFloat border = 1.0f;
-    CGFloat offsetTriggerValue = 0.8f; // it's value in percents. Means the distance between item and center position.
     
     if (direction < 0.0f) {
         
-        if ( clampedOffset <= -0.8f) {
+        if ( clampedOffset <= -kOffsetTriggerValue) {
             
             clampedOffset = -border;
-        } else if (clampedOffset > 0.2f){
+        } else if (clampedOffset > (border - kOffsetTriggerValue)){
             
             clampedOffset = border;
         } else {
@@ -61,10 +59,10 @@ NSString *const kCarouselItemIdentifier = @"IssueCarouselCell";
         
     } else {
         
-        if ( clampedOffset >= 0.8f) {
+        if ( clampedOffset >= kOffsetTriggerValue) {
             
             clampedOffset = border;
-        } else if ( clampedOffset <= -0.2f){
+        } else if ( clampedOffset <= -(border - kOffsetTriggerValue)){
             
             clampedOffset = -border;
         } else {
@@ -114,7 +112,6 @@ NSString *const kCarouselItemIdentifier = @"IssueCarouselCell";
     transform.m34 = _perspective;
     transform = CATransform3DTranslate(transform, -_viewpointOffset.width, -_viewpointOffset.height, 0.0f);
     
-    
     // normalisation for interval [-1.0f; 0.0f] and [0.0f; 1.0f]
     CGFloat genericClampedOffset = fmaxf(-1.0f, fminf(1.0f, offsetFromCenteredItem));
     [self setClampedOffset: genericClampedOffset];
@@ -124,8 +121,8 @@ NSString *const kCarouselItemIdentifier = @"IssueCarouselCell";
     CGFloat z = fabsf(self.clampedOffset) * -kIssueItemWidth / 3.0f;
     
     // It should be a constant
-    CGFloat xOffset = 200.0f;
-    CGFloat x = self.clampedOffset * xOffset;//;
+    CGFloat xOffset = 300.0f;
+    CGFloat x = self.clampedOffset * xOffset;
     
     transform = CATransform3DTranslate(transform, x, 0.0f, z);
     self.transform3D = CATransform3DRotate(transform, angle, 0.0f, -1.0f, 0.0f);

@@ -13,7 +13,7 @@
 
 @class CECarouselLayout;
 
-@interface CECarouselViewController : UICollectionViewController
+@interface CECarouselViewController : UICollectionViewController <CECarouselSelectionDelegate>
 
 @property (nonatomic, strong) CECarouselLayout *carouselLayout;
 

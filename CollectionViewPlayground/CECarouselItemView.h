@@ -8,6 +8,7 @@
 
 #import "CEFlowContentInfoView.h"
 
+extern CGFloat const kOffsetTriggerValue; // it's value in percents. Means the distance between item and center position.
 extern NSString *const kCarouselItemIdentifier;
 
 @interface CECarouselItemView : CEFlowContentInfoView {

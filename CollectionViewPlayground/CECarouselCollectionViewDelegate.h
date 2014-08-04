@@ -12,6 +12,14 @@
 // for test
 #import "CEFloatCollectionViewDelegate.h"
 
+@protocol CECarouselSelectionDelegate <NSObject>
+
+@required
+
+- (void) itemSelectedAtIndexPath: (NSIndexPath *) indexPath;
+
+@end
+
 @interface CECarouselCollectionViewDelegate : NSObject <UICollectionViewDelegate> {
     
     NSTimer *_scrollingSettleTimer;
@@ -29,6 +37,8 @@
 @property (nonatomic, assign) CGFloat currentOffset;
 @property (nonatomic, assign) CGFloat offsetBetweenIssues;
 @property (nonatomic, strong) NSIndexPath* selectedIndex;
+
+@property (nonatomic, assign) id<CECarouselSelectionDelegate> delegate;
 
 - (void) updateCurrentOffset: (UIScrollView*) scrollView;
 

@@ -251,6 +251,8 @@
     
     CAKeyframeAnimation *bouncingAnimation = [CECarouselAnimations bouncingAnimationForItem: item];
     [item.layer addAnimation: bouncingAnimation forKey: @"bouncing"];
+//    [bouncingAnimation setDelegate: self];
+    [self.delegate itemSelectedAtIndexPath: self.selectedIndex];
 }
 
 - (float) normalizedOffset {
@@ -261,7 +263,8 @@
     CGFloat normalizedOffset = _currentOffset;
     if (_rigthScrollingDirection) {
         
-        if (fractPart >= 0.8f) {
+        //TODO: merge this constants with 
+        if (fractPart >= kOffsetTriggerValue) {
             
             normalizedOffset = ceilf(_currentOffset);
         } else {
@@ -270,7 +273,7 @@
         }
     } else {
         
-        if (fractPart <= 0.2f) {
+        if (fractPart <= kOffsetTriggerValue) {
             
             normalizedOffset = floorf(_currentOffset);
         } else {
@@ -281,5 +284,22 @@
     
     return normalizedOffset;
 }
+
+//- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+//    
+//    [self.delegate itemSelectedAtIndexPath: self.selectedIndex];
+//    
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        
+//        for (CECarouselItemView *itemView in self.scrollview.subviews) {
+//            
+//            if ([itemView.layer animationForKey: @"bouncing"] == anim) {
+//                
+//                [itemView.layer removeAnimationForKey: @"bouncing"];
+//            }
+//        }
+//    });
+//}
+
 
 @end

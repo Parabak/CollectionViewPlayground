@@ -9,8 +9,17 @@
 #import "CECarouselCollectionViewDataSource.h"
 #import "CECarouselItemView.h"
 #import "CECarouselFooterView.h"
-
 #import "CECarouselCollectionViewDelegate.h"
+
+#import "CEIssue.h"
+#import "BHPhoto.h"
+
+@interface CECarouselCollectionViewDataSource ()
+
+// Test
+@property (nonatomic, strong) NSOperationQueue *thumbnailQueue;
+
+@end
 
 @implementation CECarouselCollectionViewDataSource
 
@@ -20,13 +29,21 @@
     
     if (self) {
         
-        NSMutableArray *numbers = [NSMutableArray array];
+        NSMutableArray *issues = [NSMutableArray array];
+
+        self.thumbnailQueue = [[NSOperationQueue alloc] init];
+        self.thumbnailQueue.maxConcurrentOperationCount = 3;
+        
         for (NSInteger index = 0; index < 20; index++) {
             
-            [numbers addObject: @(index)];
+            CEIssue *issue = [[CEIssue alloc] init];
+            NSURL *urlPath = [NSURL URLWithString: [self getURLStringForIndex: index]];
+            issue.issuePreview = [BHPhoto photoWithImageURL: urlPath];
+            
+            [issues addObject: issue];
         }
         
-        _fakeSource = [NSMutableArray arrayWithArray: numbers];
+        _fakeSource = [NSMutableArray arrayWithArray: issues];
     }
     
     return self;
@@ -63,8 +80,23 @@
                                                                                  forIndexPath: indexPath];
     
     issueCell.tag = indexPath.item;
-    [issueCell.lblTitle setText: [NSString stringWithFormat: @"Issue title %i", ((NSNumber*)_fakeSource[indexPath.item]).integerValue]];
+    [issueCell.lblTitle setText: [NSString stringWithFormat: @"Issue title %i", indexPath.item]];
     
+    CEIssue *issue = _fakeSource[indexPath.item];
+    
+    // load photo images in the background
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        UIImage *image = [issue.issuePreview image];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            issueCell.imageView.image = image;
+            
+        });
+    }];
+    operation.queuePriority = (indexPath.item == 0) ?
+    NSOperationQueuePriorityHigh : NSOperationQueuePriorityNormal;
+    [self.thumbnailQueue addOperation:operation];
     
     //TODO: move to item method
     issueCell.clampedOffset = 0;
@@ -75,27 +107,41 @@
     return issueCell;
 }
 
-//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
-//           viewForSupplementaryElementOfKind:(NSString *)kind
-//                                 atIndexPath:(NSIndexPath *)indexPath;
-//{
-//    CECarouselFooterView *titleView = [collectionView dequeueReusableSupplementaryViewOfKind: kind
-//                                                                         withReuseIdentifier: kCarouselSupplementaryItemIdentifier
-//                                                                                forIndexPath: indexPath];
-//    
-//    titleView.tag = indexPath.item;
-//    
-//    titleView.layer.anchorPoint = CGPointMake(titleView.frame.size.width, 0.0f);
-//    
-//    titleView.titleLabel.text = [NSString stringWithFormat: @"reusable view. index %i", indexPath.item];
-//    
-//    //TODO: move to item method
-//    titleView.clampedOffset = 0;
-//    
-//    CGFloat currentOffset = ((CECarouselCollectionViewDelegate*) collectionView.delegate).currentOffset;
-//    [titleView calculateTransformationForOffset: indexPath.item - currentOffset];
-//    
-//    return titleView;
-//}
+
+#pragma mark - Test section
+- (NSString *) getURLStringForIndex: (NSInteger) index {
+    
+    NSArray *urlsStrings = @[
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=22140704&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=21140627&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=23140606&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=21140530&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=22140509&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=24140506&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=21140430&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=24140406&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=23140404&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=21140328&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=24140326&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=24140317&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=22140307&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=21140228&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=23140207&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=24140202&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=21140201&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=21140131&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=24140120&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=22140117&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=24140101&format=preview-double",
+    @"https://epaper-idg.mineus.com/macwelt/live/ipad/v3/issue-page-preview?id=23140101&format=preview-double"];
+    
+    if (index < urlsStrings.count) {
+        
+        return urlsStrings[index];
+    } else {
+        
+        return @"";
+    }
+}
 
 @end

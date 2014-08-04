@@ -11,11 +11,11 @@
 NSString *const kFlowContentInfoViewInendifier = @"IssueFloatCell";
 
 // visible constants
-CGFloat const kIssueItemWidth = 265.0f; // 365
-CGFloat const kIssueItemHeight = 325.0f; // 555
+CGFloat const kIssueItemWidth = 365.0f; // 365
+CGFloat const kIssueItemHeight = 555.0f; // 555
 
 // private constants
-CGFloat const kIssueCoverHeight = 250;//490.0f;
+CGFloat const kIssueCoverHeight = 490.0f;//490.0f;
 CGFloat const kIssueSupplementleHeight = 60.0f;
 CGFloat const kIconsTitlePadding = 5.0f;
 
@@ -268,8 +268,6 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
         _imageView = [[UIImageView alloc] init];
         //        _imageView.layer.borderWidth = [StyleSheet shared].idgItemBorderWidth;
         //		_imageView.layer.borderColor = [StyleSheet shared].idgItemBorderColor.CGColor;
-        _imageView.layer.borderWidth = 3.0f;
-        _imageView.layer.borderColor = [UIColor redColor].CGColor;
         _imageView.clipsToBounds = YES;
         _imageView.userInteractionEnabled = YES;
         _imageView.contentMode = UIViewContentModeScaleToFill;
