@@ -11,15 +11,16 @@
 #import "CEGridLayout.h"
 #import "CEGridIssueCell.h"
 #import "CEIssueFooterReusableView.h"
+#import "CECollectionViewSelectionDelegate.h"
 
 
-@class CECollectionViewDataSource, CEFloatCollectionViewDelegate;
+@class CECollectionViewDataSource, CEGridViewDelegate;
 
-@interface CECollectionViewController : UICollectionViewController
+@interface CECollectionViewController : UICollectionViewController <CECollectionViewSelectionDelegate>
 
 @property (nonatomic, weak) IBOutlet CEGridLayout *gridLayout;
 
-@property (nonatomic, strong) CEFloatCollectionViewDelegate *collectionViewDelegate;
+@property (nonatomic, strong) CEGridViewDelegate *collectionViewDelegate;
 @property (nonatomic, strong) CECollectionViewDataSource *collectionViewDataSource;
 
 @end

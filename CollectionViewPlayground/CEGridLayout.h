@@ -23,6 +23,4 @@ static NSUInteger const kIssueCellBaseZIndex = 100;
 
 @property (nonatomic) CGFloat titleHeight;
 
-@property (nonatomic, strong) NSArray *rotations;
-
 @end

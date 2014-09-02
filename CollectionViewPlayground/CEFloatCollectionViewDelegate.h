@@ -29,6 +29,4 @@
 // hide it
 //- (void) decelerationSettled;
 
-
-
 @end

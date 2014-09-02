@@ -22,6 +22,9 @@
 		BE1EAFEA197D110300D87507 /* CECarouselCollectionViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1EAFE9197D110300D87507 /* CECarouselCollectionViewDelegate.m */; };
 		BE1EAFED197D111600D87507 /* CECarouselCollectionViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1EAFEC197D111600D87507 /* CECarouselCollectionViewDataSource.m */; };
 		BE3575ED197927D700B132B7 /* MINDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3575EC197927D700B132B7 /* MINDeviceInfo.m */; };
+		BE4CF24219B4ABFF003C6BF9 /* CEGridViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4CF24119B4ABFF003C6BF9 /* CEGridViewDelegate.m */; };
+		BE62B4E01992270E0040C568 /* CEBaseCollectionViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = BE62B4DF1992270E0040C568 /* CEBaseCollectionViewDataSource.m */; };
+		BE62B4E61993AEED0040C568 /* CEMainViewController_Phone.m in Sources */ = {isa = PBXBuildFile; fileRef = BE62B4E51993AEED0040C568 /* CEMainViewController_Phone.m */; };
 		BEDADDB5198F8654007F8917 /* CEIssue.m in Sources */ = {isa = PBXBuildFile; fileRef = BEDADDB4198F8654007F8917 /* CEIssue.m */; };
 		BEEB6E22196D511E00BB2AB1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEEB6E21196D511E00BB2AB1 /* Foundation.framework */; };
 		BEEB6E24196D511E00BB2AB1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEEB6E23196D511E00BB2AB1 /* CoreGraphics.framework */; };
@@ -87,6 +90,13 @@
 		BE1EAFEC197D111600D87507 /* CECarouselCollectionViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CECarouselCollectionViewDataSource.m; sourceTree = "<group>"; };
 		BE3575EB197927D700B132B7 /* MINDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MINDeviceInfo.h; sourceTree = "<group>"; };
 		BE3575EC197927D700B132B7 /* MINDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MINDeviceInfo.m; sourceTree = "<group>"; };
+		BE4CF24019B4ABFF003C6BF9 /* CEGridViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CEGridViewDelegate.h; sourceTree = "<group>"; };
+		BE4CF24119B4ABFF003C6BF9 /* CEGridViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CEGridViewDelegate.m; sourceTree = "<group>"; };
+		BE4CF24319B4AE9E003C6BF9 /* CECollectionViewSelectionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CECollectionViewSelectionDelegate.h; sourceTree = "<group>"; };
+		BE62B4DE1992270E0040C568 /* CEBaseCollectionViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CEBaseCollectionViewDataSource.h; sourceTree = "<group>"; };
+		BE62B4DF1992270E0040C568 /* CEBaseCollectionViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CEBaseCollectionViewDataSource.m; sourceTree = "<group>"; };
+		BE62B4E41993AEED0040C568 /* CEMainViewController_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CEMainViewController_Phone.h; sourceTree = "<group>"; };
+		BE62B4E51993AEED0040C568 /* CEMainViewController_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CEMainViewController_Phone.m; sourceTree = "<group>"; };
 		BEB843721981024F00BB5D37 /* CECarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CECarouselViewController.h; sourceTree = "<group>"; };
 		BEDADDB3198F8654007F8917 /* CEIssue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CEIssue.h; sourceTree = "<group>"; };
 		BEDADDB4198F8654007F8917 /* CEIssue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CEIssue.m; sourceTree = "<group>"; };
@@ -291,16 +301,21 @@
 		BEEB6E62196D676700BB2AB1 /* Delegates */ = {
 			isa = PBXGroup;
 			children = (
+				BE62B4DE1992270E0040C568 /* CEBaseCollectionViewDataSource.h */,
+				BE62B4DF1992270E0040C568 /* CEBaseCollectionViewDataSource.m */,
 				BEEB6E66196D68CC00BB2AB1 /* CECollectionViewDataSource.h */,
 				BEEB6E67196D68CC00BB2AB1 /* CECollectionViewDataSource.m */,
-				BEEB6E63196D68AD00BB2AB1 /* CEFloatCollectionViewDelegate.h */,
-				BEEB6E64196D68AD00BB2AB1 /* CEFloatCollectionViewDelegate.m */,
 				BEEB6E7F196EB4ED00BB2AB1 /* CEFloatCollectionViewDataSource.h */,
 				BEEB6E80196EB4ED00BB2AB1 /* CEFloatCollectionViewDataSource.m */,
-				BE1EAFE8197D110300D87507 /* CECarouselCollectionViewDelegate.h */,
-				BE1EAFE9197D110300D87507 /* CECarouselCollectionViewDelegate.m */,
 				BE1EAFEB197D111600D87507 /* CECarouselCollectionViewDataSource.h */,
 				BE1EAFEC197D111600D87507 /* CECarouselCollectionViewDataSource.m */,
+				BEEB6E63196D68AD00BB2AB1 /* CEFloatCollectionViewDelegate.h */,
+				BEEB6E64196D68AD00BB2AB1 /* CEFloatCollectionViewDelegate.m */,
+				BE1EAFE8197D110300D87507 /* CECarouselCollectionViewDelegate.h */,
+				BE1EAFE9197D110300D87507 /* CECarouselCollectionViewDelegate.m */,
+				BE4CF24019B4ABFF003C6BF9 /* CEGridViewDelegate.h */,
+				BE4CF24119B4ABFF003C6BF9 /* CEGridViewDelegate.m */,
+				BE4CF24319B4AE9E003C6BF9 /* CECollectionViewSelectionDelegate.h */,
 			);
 			name = Delegates;
 			sourceTree = "<group>";
@@ -329,6 +344,8 @@
 				BE1EAFE6197D02BE00D87507 /* CECarouselViewController.m */,
 				BE1930291976731A003E4E56 /* CEMainViewController.h */,
 				BE19302A1976731A003E4E56 /* CEMainViewController.m */,
+				BE62B4E41993AEED0040C568 /* CEMainViewController_Phone.h */,
+				BE62B4E51993AEED0040C568 /* CEMainViewController_Phone.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -444,6 +461,7 @@
 				BEEB6E5B196D551C00BB2AB1 /* CEGridLayout.m in Sources */,
 				BE19302B1976731A003E4E56 /* CEMainViewController.m in Sources */,
 				BE1EAFE7197D02BE00D87507 /* CECarouselViewController.m in Sources */,
+				BE4CF24219B4ABFF003C6BF9 /* CEGridViewDelegate.m in Sources */,
 				BEDADDB5198F8654007F8917 /* CEIssue.m in Sources */,
 				BEEB6E81196EB4ED00BB2AB1 /* CEFloatCollectionViewDataSource.m in Sources */,
 				BEEB6E75196EA14200BB2AB1 /* CEFlowViewController.m in Sources */,
@@ -461,6 +479,8 @@
 				8B255835198B83AD00B7B96A /* CECarouselFooterView.m in Sources */,
 				8BD6DC66198A87030066FB71 /* CECarouselAnimations.m in Sources */,
 				BEEB6E3B196D511E00BB2AB1 /* CECollectionViewController.m in Sources */,
+				BE62B4E61993AEED0040C568 /* CEMainViewController_Phone.m in Sources */,
+				BE62B4E01992270E0040C568 /* CEBaseCollectionViewDataSource.m in Sources */,
 				BEEB6E68196D68CD00BB2AB1 /* CECollectionViewDataSource.m in Sources */,
 				BEEB6E6E196D908400BB2AB1 /* BHAlbum.m in Sources */,
 			);

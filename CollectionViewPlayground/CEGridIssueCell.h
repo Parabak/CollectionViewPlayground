@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#import "CEFlowContentInfoView.h"
+
+extern CGFloat const kPhoneIssueCellWidth;
+extern CGFloat const kPhoneIssueCellHeight;
 extern NSString * const kIssueGridCellIdentifier;
 
-@interface CEGridIssueCell : UICollectionViewCell
-
-@property (nonatomic, strong, readonly) UIImageView *imageView;
+@interface CEGridIssueCell : CEFlowContentInfoView//UICollectionViewCell
 
 @end

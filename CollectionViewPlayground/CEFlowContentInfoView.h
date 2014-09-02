@@ -32,15 +32,16 @@ extern NSString *const kProgressBarValue;
 
 @property (nonatomic, assign) BOOL editMode;
 
-@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, assign) CGSize  imageViewSize;
+@property (nonatomic, assign) CGFloat supplementHeight;
+@property (nonatomic, assign) CGFloat titleImagePadding;
 
+@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) UIView *maskView;
-
 @property (nonatomic, strong) UILabel *lblTitle;
 @property (nonatomic, strong) UIButton *deleteIconButton;
 @property (nonatomic, strong) UIButton *btnDelete;
-
 // show the status of item
 @property (nonatomic, strong) UIImageView *downloadedIcon;
 @property (nonatomic, strong) UIImageView *updateIcon;
@@ -49,13 +50,11 @@ extern NSString *const kProgressBarValue;
 
 @property (nonatomic, weak) id <IDGItemViewDelegate> delegate;
 
+//For demostration
+@property (nonatomic, strong) NSString *presentedImageURL;
 
-
-// or it will be better not to ask cell, but use a property of presented model
+//TODO: or it will be better not to ask cell, but use a property of presented model
 - (BOOL) isEnabled;
-
-// TODO: remove it
-@property (nonatomic, strong) UIView *centerLine;
 
 
 @end

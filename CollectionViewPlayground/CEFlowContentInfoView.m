@@ -11,20 +11,19 @@
 NSString *const kFlowContentInfoViewInendifier = @"IssueFloatCell";
 
 // visible constants
-CGFloat const kIssueItemWidth = 365.0f; // 365
-CGFloat const kIssueItemHeight = 555.0f; // 555
+CGFloat const kIssueItemWidth = 365.0f;
+CGFloat const kIssueItemHeight = 555.0f;
 
 // private constants
-CGFloat const kIssueCoverHeight = 490.0f;//490.0f;
+CGFloat const kIssueCoverHeight = 490.0f;
 CGFloat const kIssueSupplementleHeight = 60.0f;
+CGFloat const kTitleImagePadding = 15.0f;
 CGFloat const kIconsTitlePadding = 5.0f;
 
 // notification user info dictionary
 NSString *const kDownloadingItemIndex = @"DownloadingItemIndex";
 NSString *const kProgressBarValue = @"ProgressBarValue";
 
-
-const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 
 @implementation UIProgressView (customView)
 
@@ -33,13 +32,6 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     CGSize newSize = CGSizeMake(kIssueItemWidth, kIssueSupplementleHeight);
 
     return newSize;
-}
-
-@end
-
-@interface CEFlowContentInfoView () {
-
-   
 }
 
 @end
@@ -75,15 +67,6 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
         }
         
         [self.layer setMinificationFilter: kCAFilterTrilinear];
-        
-        // for test purposes
-        self.centerLine = [[UIView alloc] initWithFrame: CGRectFromString(@"{{0.0f, 0.0f},{2.0f, 80.0f}}")];
-        [self.centerLine setBackgroundColor: [UIColor colorWithRed: 17.0f / 255.0f
-                                                        green:210.0f / 255.0f
-                                                         blue: 1.0f
-                                                        alpha: 1.0f]];
-        
-        [self addSubview: self.centerLine];
     }
     
     return self;
@@ -96,7 +79,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 
 - (void) layoutSubviews {
 	
-	_imageView.frame = CGRectMake(0, 0, imageViewSize.width, imageViewSize.height);
+	_imageView.frame = CGRectMake(0, 0, self.imageViewSize.width, self.imageViewSize.height);
     
     _activityIndicator.center = _imageView.center;
     
@@ -105,13 +88,12 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     [_lblTitle sizeToFit];
 
 	_lblTitle.frame = CGRectMake((_imageView.frame.size.width - _lblTitle.frame.size.width) / 2,
-                                 _imageView.frame.origin.y + _imageView.frame.size.height + 15,
+                                 _imageView.frame.origin.y + _imageView.frame.size.height + self.titleImagePadding,
                                  _lblTitle.frame.size.width, _lblTitle.frame.size.height);
 	
-    
-    _progressView.frame = CGRectMake(0.0f, imageViewSize.height,
-                                     _imageView.frame.size.width,
-                                     kIssueSupplementleHeight);
+    _progressView.frame = CGRectMake(0.0f, self.imageViewSize.height,
+                                     _progressView.frame.size.width,
+                                     _progressView.frame.size.height);
     
 	_updateIcon.center = CGPointMake(_lblTitle.frame.origin.x - _updateIcon.frame.size.width - kIconsTitlePadding,
                                      _lblTitle.center.y);
@@ -119,9 +101,9 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     
     _deleteIconButton.center = CGPointMake(_downloadedIcon.center.x + 1, _downloadedIcon.center.y);
     _btnDelete.frame = CGRectMake(_imageView.frame.origin.x,
-                                      _imageView.frame.origin.y + _imageView.frame.size.height - 1,
-                                      _imageView.frame.size.width,
-                                      kIssueSupplementleHeight);
+                                  _imageView.frame.origin.y + _imageView.frame.size.height - 1,
+                                  _imageView.frame.size.width,
+                                  self.supplementHeight);
     
 //    BOOL isUpdateIconVisible = (_updateIcon.image != nil && _updateIcon.hidden == NO);
     BOOL isDownloadedIconVisible = (_downloadedIcon.image != nil && _downloadedIcon.hidden == NO);
@@ -139,15 +121,21 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     
     [self sizeToFit];
     
-    [self.centerLine setCenter: _imageView.center];
+//    [self.centerLine setCenter: _imageView.center];
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    self.imageView.image = nil;
+}
 
 - (CGSize) sizeThatFits: (CGSize) size {
     
-    CGFloat height = _imageView.frame.origin.y + _imageView.frame.size.height + kIssueSupplementleHeight;
+    CGFloat height = _imageView.frame.origin.y + _imageView.frame.size.height + self.supplementHeight;
     
-    return CGSizeMake(imageViewSize.width, height);
+    return CGSizeMake(self.imageViewSize.width, height);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,24 +158,25 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 - (void) showDeleteIcon {
     
     [self.btnDelete setHidden: YES];
+    
+    self.downloadedIcon.hidden = YES;
+    self.updateIcon.hidden = YES;
     [self.deleteIconButton setHidden: NO];
 }
 
 - (void) showDeleteButton {
 
+    [self.deleteIconButton setHidden: YES];
     [self.btnDelete setHidden: NO];
     _recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(removeDeleteButtonRecognizer:)];
     [_imageView addGestureRecognizer:_recognizer];
     
     _imageView.userInteractionEnabled = YES;
-//    if (_delegate && [_delegate respondsToSelector:@selector(itemViewDidShowDeleteButton:)]) {
-//        
-//        [_delegate itemViewDidShowDeleteButton:self];
-//    }
 }
 
 - (void) hideAllDeleteStuff {
     
+    [_updateIcon setHidden: NO];
     [_btnDelete setHidden: YES];
     [_deleteIconButton setHidden: YES];
 }
@@ -207,6 +196,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 - (void) showProgressBar: (NSNotification *) item {
 
     NSDictionary *userInfo = item.userInfo;
+    
     if (((NSNumber*)[userInfo objectForKey: kDownloadingItemIndex]).integerValue == self.tag) {
         
         NSNumber *value = [userInfo objectForKey: kProgressBarValue];
@@ -270,6 +260,21 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 
 #pragma mark -
 #pragma mark - Properties
+
+- (CGFloat) supplementHeight {
+    
+    return kIssueSupplementleHeight;
+}
+
+- (CGFloat) titleImagePadding {
+    
+    return kTitleImagePadding;
+}
+
+- (CGSize) imageViewSize {
+    
+    return CGSizeMake(kIssueItemWidth, kIssueCoverHeight);
+}
 
 - (UIImageView *) imageView {
     
@@ -402,7 +407,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
         [_btnDelete setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         //		[_btnDelete setTitle: MINLocalizedString(@"DELETE", nil) forState: UIControlStateNormal];
         [_btnDelete setTitle: @"Delete" forState: UIControlStateNormal];
-        [_btnDelete setFrame: CGRectMake(_btnDelete.frame.origin.x, _btnDelete.frame.origin.y, self.frame.size.width, kIssueSupplementleHeight)];
+        [_btnDelete setFrame: CGRectMake(_btnDelete.frame.origin.x, _btnDelete.frame.origin.y, self.frame.size.width, self.supplementHeight)];
         
 		[_btnDelete addTarget: self
                        action: @selector(deleteButtonTouched)
@@ -420,7 +425,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
 
 - (void) layoutWithVisibleIcons {
     
-    CGFloat maxWidth = imageViewSize.width - (_downloadedIcon.frame.size.width + _downloadedIcon.frame.size.width / 2.0);
+    CGFloat maxWidth = self.imageViewSize.width - (_downloadedIcon.frame.size.width + _downloadedIcon.frame.size.width / 2.0);
     
     CGFloat actualWidth = MIN(maxWidth, _lblTitle.frame.size.width);
     
@@ -428,7 +433,7 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     CGFloat origin = (_imageView.frame.size.width - combinedWidth) / 2;
     
     _updateIcon.frame = CGRectMake(origin,
-                                   _imageView.frame.origin.y + _imageView.frame.size.height + 15,
+                                   _imageView.frame.origin.y + _imageView.frame.size.height + self.titleImagePadding,
                                    _updateIcon.frame.size.width, _updateIcon.frame.size.height);
     _downloadedIcon.center = _updateIcon.center;
     
@@ -438,22 +443,22 @@ const CGSize imageViewSize = {kIssueItemWidth, kIssueCoverHeight};
     if (_deleteIconButton.hidden) {
     
         _lblTitle.frame = CGRectMake(_updateIcon.frame.origin.x + _updateIcon.frame.size.width + _updateIcon.frame.size.width / 2,
-                                     _imageView.frame.origin.y + _imageView.frame.size.height + 15,
+                                     _imageView.frame.origin.y + _imageView.frame.size.height + self.titleImagePadding,
                                      actualWidth, _lblTitle.frame.size.height);
     } else {
         
         _lblTitle.frame = CGRectMake(_deleteIconButton.frame.origin.x + _deleteIconButton.frame.size.width + _deleteIconButton.frame.size.width / 2,
-                                     _imageView.frame.origin.y + _imageView.frame.size.height + 15,
+                                     _imageView.frame.origin.y + _imageView.frame.size.height + self.titleImagePadding,
                                      actualWidth, _lblTitle.frame.size.height);
     }
 }
 
 - (void) layoutTitleLable {
     
-    CGFloat maxWidth = imageViewSize.width;
+    CGFloat maxWidth = self.imageViewSize.width;
     
     _lblTitle.frame = CGRectMake((_imageView.frame.size.width - maxWidth) / 2,
-                                 _imageView.frame.origin.y + _imageView.frame.size.height + 15,
+                                 _imageView.frame.origin.y + _imageView.frame.size.height + self.titleImagePadding,
                                  maxWidth, _lblTitle.frame.size.height);
 }
 

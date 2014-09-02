@@ -9,57 +9,59 @@
 #import "CEGridIssueCell.h"
 #import <QuartzCore/QuartzCore.h>
 
+CGFloat const kPhoneIssueCellWidth = 133.0f;
+CGFloat const kPhoneIssueCellHeight = 200.0f;
+
+CGFloat const kPhoneImagePreviewWidth = 130.0f;
+CGFloat const kPhoneImagePreviewHeight = 173.0f;
+CGFloat const kPhoneIssueSupplementHeight = 20.0f;
+CGFloat const kPhoneIssueTitleImagePadding = 4.0f;
 
 NSString * const kIssueGridCellIdentifier = @"IssueGridCell";
 
-@interface CEGridIssueCell ()
 
-@property (nonatomic, strong, readwrite) UIImageView *imageView;
+@implementation UIProgressView (customView)
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    
+    CGSize newSize = CGSizeMake(kPhoneImagePreviewWidth, kPhoneIssueSupplementHeight);
+    
+    return newSize;
+}
 
 @end
 
+
 @implementation CEGridIssueCell
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    
-    if (self) {
+@synthesize lblTitle = _lblTitle;
 
-        self.backgroundColor = [UIColor colorWithWhite:0.85f alpha:1.0f];
+#pragma mark - Properties
+
+- (CGSize) imageViewSize {
+
+    return CGSizeMake(kPhoneImagePreviewWidth, kPhoneImagePreviewHeight);
+}
+
+- (CGFloat) supplementHeight {
+    
+    return kPhoneIssueSupplementHeight;
+}
+
+- (CGFloat) titleImagePadding {
+    
+    return kPhoneIssueTitleImagePadding;
+}
+
+- (UILabel *) lblTitle {
+    
+    if (_lblTitle == nil) {
         
-        self.layer.borderColor = [UIColor whiteColor].CGColor;
-        self.layer.borderWidth = 3.0f;
-        self.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.layer.shadowRadius = 3.0f;
-        self.layer.shadowOffset = CGSizeMake(0.0f, 2.0f);
-        self.layer.shadowOpacity = 0.5f;
-        
-        self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        self.imageView.clipsToBounds = YES;
-        
-        self.layer.rasterizationScale = [UIScreen mainScreen].scale;
-        self.layer.shouldRasterize = YES;
-        
-        [self.contentView addSubview:self.imageView];
+        _lblTitle = [super lblTitle];
+        [_lblTitle setFont: [UIFont systemFontOfSize: 10.0f]];
     }
-    return self;
-}
 
-- (void)prepareForReuse
-{
-    [super prepareForReuse];
-    
-    self.imageView.image = nil;
+    return _lblTitle;
 }
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end

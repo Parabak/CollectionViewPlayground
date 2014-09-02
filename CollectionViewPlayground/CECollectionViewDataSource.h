@@ -7,11 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CEBaseCollectionViewDataSource.h"
 
-@interface CECollectionViewDataSource : NSObject <UICollectionViewDataSource>
-
-@property (nonatomic, strong) NSMutableArray *albums;
-
-@property (nonatomic, strong) NSOperationQueue *thumbnailQueue;
+@interface CECollectionViewDataSource : CEBaseCollectionViewDataSource
 
 @end

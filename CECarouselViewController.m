@@ -90,21 +90,21 @@
 
 
 #pragma mark -
-#pragma mark - CECarouselSelectionDelegate
+#pragma mark - CECollectionViewSelectionDelegate
 
 - (void)itemSelectedAtIndexPath:(NSIndexPath *)indexPath {
     
     CGFloat timing = kBounceAnimationDuration - 0.15f; // we will not waiting the completion of animation
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timing * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
     
-        UIViewController *test = [[UIViewController alloc] init];
-        [test.view setFrame: self.view.frame];
-        [test.view setBackgroundColor: [UIColor whiteColor]];
+        UIViewController *issuePresentationController = [[UIViewController alloc] init];
+        [issuePresentationController.view setFrame: self.view.frame];
+        [issuePresentationController.view setBackgroundColor: [UIColor whiteColor]];
         
-        [test setModalPresentationStyle: UIModalPresentationCurrentContext];
-        [test setModalTransitionStyle: UIModalTransitionStyleCrossDissolve];
+        [issuePresentationController setModalPresentationStyle: UIModalPresentationCurrentContext];
+        [issuePresentationController setModalTransitionStyle: UIModalTransitionStyleCrossDissolve];
         
-        [self presentViewController: test animated: YES completion:^{
+        [self presentViewController: issuePresentationController animated: YES completion:^{
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 

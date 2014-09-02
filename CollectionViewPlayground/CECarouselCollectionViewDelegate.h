@@ -8,17 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
+#import "CECollectionViewSelectionDelegate.h"
 
 // for test
 #import "CEFloatCollectionViewDelegate.h"
 
-@protocol CECarouselSelectionDelegate <NSObject>
 
-@required
-
-- (void) itemSelectedAtIndexPath: (NSIndexPath *) indexPath;
-
-@end
 
 @interface CECarouselCollectionViewDelegate : NSObject <UICollectionViewDelegate> {
     
@@ -38,7 +33,7 @@
 @property (nonatomic, assign) CGFloat offsetBetweenIssues;
 @property (nonatomic, strong) NSIndexPath* selectedIndex;
 
-@property (nonatomic, assign) id<CECarouselSelectionDelegate> delegate;
+@property (nonatomic, assign) id<CECollectionViewSelectionDelegate> delegate;
 
 - (void) updateCurrentOffset: (UIScrollView*) scrollView;
 

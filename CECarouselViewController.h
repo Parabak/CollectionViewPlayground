@@ -10,10 +10,9 @@
 #import "CECarouselCollectionViewDataSource.h"
 #import "CECarouselCollectionViewDelegate.h"
 
-
 @class CECarouselLayout;
 
-@interface CECarouselViewController : UICollectionViewController <CECarouselSelectionDelegate>
+@interface CECarouselViewController : UICollectionViewController <CECollectionViewSelectionDelegate>
 
 @property (nonatomic, strong) CECarouselLayout *carouselLayout;
 

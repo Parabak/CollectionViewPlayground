@@ -70,7 +70,7 @@ NSString * const kCarouselLayoutSupplementaryKind = @"IssueCarouselTitle";
 #pragma mark - Private
 
 - (CGRect) frameForIssueAtIndexPath: (NSIndexPath *) indexPath {
-    
+
     CGFloat originX = floorf(self.itemInsets.left + kItemsOffset * indexPath.item); //kItemsOffset
     CGFloat originY = self.itemInsets.top;
     

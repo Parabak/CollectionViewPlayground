@@ -14,4 +14,6 @@ extern CGFloat const kBounceAnimationDuration;
 
 + (CAKeyframeAnimation*) bouncingAnimationForItem: (UIView*) item;
 
++ (CAKeyframeAnimation*) bouncingScaleAnimationForItem: (UIView*) item;
+
 @end

@@ -7,23 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CEFlowContentInfoView.h"
+#import "CEBaseCollectionViewDataSource.h"
 
-@interface CEFloatCollectionViewDataSource : NSObject <UICollectionViewDataSource, IDGItemViewDelegate> {
-
-    // is equall to total issues count
-    NSInteger _columnsCount;
-    NSArray *_fakeSource;
-    
-    // should be replaced by delegate
-    UICollectionView *_collectionView;
-}
-
-@property (nonatomic, assign) BOOL editMode;
-/// For Demonstation Only ///
-@property (nonatomic, assign) BOOL showUpdateIcon;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (NSInteger) getColumnsCount;
-
+@interface CEFloatCollectionViewDataSource : CEBaseCollectionViewDataSource
 @end

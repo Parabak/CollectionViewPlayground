@@ -7,8 +7,9 @@
 //
 
 #import "CEGridLayout.h"
+#import "CEGridIssueCell.h"
 
-static NSString * const kIssueLayoutCellKind = @"IssueCell";
+NSString * const kIssueLayoutCellKind = @"IssueCell";
 NSString * const kIssueLayoutAlbumTitleKind = @"AlbumTitle";
 
 @interface CEGridLayout ()
@@ -50,39 +51,11 @@ NSString * const kIssueLayoutAlbumTitleKind = @"AlbumTitle";
 - (void) setup {
     
     // TODO: use constants
-    self.itemInsets = UIEdgeInsetsMake(22.0f, 22.0f, 13.0f, 22.0f);
-    self.itemSize = CGSizeMake(125.0f, 125.0f);
-//#define CELL_IPHONE_WIDTH	133.0f
-//#define CELL_IPHONE_HEIGHT	200.0f
+    self.itemInsets = UIEdgeInsetsMake(62.0f, 22.0f, 13.0f, 22.0f);
+    self.itemSize = CGSizeMake(kPhoneIssueCellWidth, kPhoneIssueCellHeight);
     
-    self.interItemSpacingY = 12.0f;
-    self.numberOfColumns = 2;
-    self.titleHeight = 26.0f;
-    
-    NSMutableArray *rotations = [NSMutableArray arrayWithCapacity: kRotationCount];
-    
-    CGFloat percentage = 0.0f;
-    for (NSInteger i = 0; i < kRotationCount; i++) {
-        // ensure that each angle is different enough to be seen
-        CGFloat newPercentage = 0.0f;
-        do {
-            newPercentage = ((CGFloat)(arc4random() % 220) - 110) * 0.0001f;
-        } while (fabsf(percentage - newPercentage) < 0.006);
-        percentage = newPercentage;
-        
-        CGFloat angle = 2 * M_PI * (1.0f + percentage);
-        CATransform3D transform = CATransform3DMakeRotation(angle, 0.0f, 0.0f, 1.0f);
-        
-        [rotations addObject:[NSValue valueWithCATransform3D:transform]];
-    }
-    
-    self.rotations = rotations;
-}
-
-- (CATransform3D)transformForAlbumPhotoAtIndex: (NSIndexPath *) indexPath {
-    
-    NSInteger offset = (indexPath.section * kRotationStride + indexPath.item);
-    return [self.rotations[offset % kRotationCount] CATransform3DValue];
+    self.interItemSpacingY = 20.0f;
+    self.numberOfColumns = UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation) ? 3 : 2;
 }
 
 #pragma mark -
@@ -128,21 +101,12 @@ NSString * const kIssueLayoutAlbumTitleKind = @"AlbumTitle";
     }
 }
 
-- (void)setTitleHeight:(CGFloat)titleHeight
-{
-    if (_titleHeight != titleHeight) {
-    
-        _titleHeight = titleHeight;
-        
-        [self invalidateLayout];
-    }
-}
-
-
 #pragma mark -
 #pragma mark - Prepare Layout
 
 - (void) prepareLayout {
+    
+    [super prepareLayout];
     
     NSMutableDictionary *newLayoutInfo = [NSMutableDictionary dictionary];
     NSMutableDictionary *cellLayoutInfo = [NSMutableDictionary dictionary];
@@ -162,19 +126,8 @@ NSString * const kIssueLayoutAlbumTitleKind = @"AlbumTitle";
             UICollectionViewLayoutAttributes *itemAttributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
             
             itemAttributes.frame = [self frameForIssueAtIndexPath:indexPath];
-            itemAttributes.transform3D = [self transformForAlbumPhotoAtIndex:indexPath];
-            itemAttributes.zIndex = kIssueCellBaseZIndex + itemCount - item;
             
             cellLayoutInfo[indexPath] = itemAttributes;
-            
-            if (indexPath.item == 0) {
-                
-                UICollectionViewLayoutAttributes *titleAttributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind: kIssueLayoutAlbumTitleKind
-                                                                                                                                   withIndexPath: indexPath];
-                titleAttributes.frame = [self frameForIssueTitleAtIndexPath:indexPath];
-                
-                titleLayoutInfo[indexPath] = titleAttributes;
-            }
         }
     }
     
@@ -191,7 +144,7 @@ NSString * const kIssueLayoutAlbumTitleKind = @"AlbumTitle";
 {
     NSInteger row = indexPath.section / self.numberOfColumns;
     NSInteger column = indexPath.section % self.numberOfColumns;
-    
+ 
     CGFloat spacingX = self.collectionView.bounds.size.width - self.itemInsets.left - self.itemInsets.right - (self.numberOfColumns * self.itemSize.width);
     
     if (self.numberOfColumns > 1) {
@@ -202,18 +155,9 @@ NSString * const kIssueLayoutAlbumTitleKind = @"AlbumTitle";
     CGFloat originX = floorf(self.itemInsets.left + (self.itemSize.width + spacingX) * column);
     
     CGFloat originY = floor(self.itemInsets.top  +
-                            (self.itemSize.height + self.titleHeight + self.interItemSpacingY) * row);
+                            (self.itemSize.height + self.interItemSpacingY) * row);
     
     return CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height);
-}
-
-- (CGRect) frameForIssueTitleAtIndexPath:(NSIndexPath *)indexPath
-{
-    CGRect frame = [self frameForIssueAtIndexPath:indexPath];
-    frame.origin.y += frame.size.height;
-    frame.size.height = self.titleHeight;
-    
-    return frame;
 }
 
 - (NSArray *)layoutAttributesForElementsInRect: (CGRect)rect
@@ -240,11 +184,6 @@ NSString * const kIssueLayoutAlbumTitleKind = @"AlbumTitle";
 #pragma mark -
 #pragma mark - Attributes
 
-- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    
-    return self.layoutInfo[kIssueLayoutAlbumTitleKind][indexPath];
-}
-
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return self.layoutInfo[kIssueLayoutCellKind][indexPath];
@@ -261,7 +200,6 @@ NSString * const kIssueLayoutAlbumTitleKind = @"AlbumTitle";
     
     CGFloat height = self.itemInsets.top +
                      rowCount * self.itemSize.height +
-                    rowCount * self.titleHeight +
                      (rowCount - 1) * self.interItemSpacingY + self.itemInsets.bottom;
     
     return CGSizeMake(self.collectionView.bounds.size.width, height);

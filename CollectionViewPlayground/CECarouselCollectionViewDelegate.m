@@ -62,19 +62,15 @@
     
     if (self.selectedIndex.item != indexPath.item || self.selectedIndex.section != indexPath.section) {
         
-        // issue should be centered
         _currentOffset = indexPath.item;
-        
         [self scrollToOffset];
     } else {
         
-        // open issue
-        for (CEFlowContentInfoView *cell in collectionView.visibleCells) {
+        CEFlowContentInfoView *selectedCell = (CEFlowContentInfoView*) [collectionView cellForItemAtIndexPath: indexPath];
+        
+        if (selectedCell.isEnabled) {
             
-            if (cell.tag == indexPath.item && cell.isEnabled) {
-                
-                [self openIssue: cell];
-            }
+            [self openIssue: selectedCell];
         }
     }
     
